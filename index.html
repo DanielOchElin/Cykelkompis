@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Cykelkompis</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1C1814">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Cykelkompis">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --menstrual: #A63D2F; --menstrual-light: #F7EDEB;
+  --follicular: #3D7A5E; --follicular-light: #E8F3EE;
+  --ovulation: #B8860B; --ovulation-light: #FBF5E0;
+  --luteal: #6B5B8A; --luteal-light: #EEE9F8;
+  --bg: #F9F6F2; --surface: #FFFFFF; --text: #1C1814;
+  --muted: #8A8178; --border: #EAE5DF;
+  --shadow: 0 2px 20px rgba(0,0,0,0.06);
+  --phase-color: #6B5B8A; --phase-light: #EEE9F8;
+}
+html, body { height: 100%; overflow-x: hidden; }
+body { font-family: 'Jost', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-weight: 300; -webkit-font-smoothing: antialiased; padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); }
+h1, h2, h3, .serif { font-family: 'Cormorant Garamond', serif; }
+#install-banner { display: none; background: var(--text); color: #fff; padding: 0.75rem 1.2rem; font-size: 0.82rem; align-items: center; gap: 0.8rem; justify-content: space-between; }
+#install-banner.show { display: flex; }
+#install-banner button { background: #fff; color: var(--text); border: none; border-radius: 8px; padding: 0.4rem 0.8rem; font-family: 'Jost', sans-serif; font-size: 0.78rem; font-weight: 500; cursor: pointer; white-space: nowrap; }
+#install-banner .dismiss { background: transparent; color: rgba(255,255,255,0.6); padding: 0.4rem 0.2rem; }
+#setup-screen { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem 1.5rem; background: linear-gradient(160deg, #F9F6F2 0%, #EEE9E2 100%); }
+.setup-card { background: var(--surface); border-radius: 24px; padding: 2.5rem 2rem; width: 100%; max-width: 420px; box-shadow: 0 8px 40px rgba(0,0,0,0.10); }
+.setup-logo { text-align: center; margin-bottom: 2rem; }
+.setup-logo h1 { font-size: 2.4rem; font-weight: 300; letter-spacing: 0.02em; line-height: 1.1; }
+.setup-logo p { color: var(--muted); font-size: 0.85rem; margin-top: 0.4rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.form-group { margin-bottom: 1.5rem; }
+.form-group label { display: block; font-size: 0.78rem; letter-spacing: 0.10em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.6rem; }
+.form-group input { width: 100%; padding: 0.85rem 1rem; border: 1.5px solid var(--border); border-radius: 12px; font-family: 'Jost', sans-serif; font-size: 1rem; font-weight: 400; color: var(--text); background: var(--bg); outline: none; transition: border-color 0.2s; }
+.form-group input:focus { border-color: var(--luteal); }
+.form-hint { font-size: 0.78rem; color: var(--muted); margin-top: 0.4rem; }
+.btn-primary { width: 100%; padding: 1rem; background: var(--text); color: #fff; border: none; border-radius: 12px; font-family: 'Jost', sans-serif; font-size: 0.9rem; font-weight: 500; letter-spacing: 0.06em; cursor: pointer; transition: opacity 0.2s, transform 0.1s; margin-top: 0.5rem; }
+.btn-primary:active { transform: scale(0.98); opacity: 0.85; }
+#app-screen { display: none; }
+.top-bar { padding: 1rem 1.2rem 0.5rem; display: flex; align-items: center; justify-content: space-between; }
+.top-bar .app-name { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 300; letter-spacing: 0.02em; }
+.top-bar .settings-btn { width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid var(--border); background: var(--surface); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1rem; }
+.date-display { font-size: 0.78rem; color: var(--muted); text-align: right; margin: 0 1.2rem 0.2rem; letter-spacing: 0.04em; }
+.phase-hero { margin: 0.8rem 1.2rem 1rem; border-radius: 20px; padding: 1.6rem; background: var(--phase-light); border: 1.5px solid var(--phase-color); position: relative; overflow: hidden; animation: fadeUp 0.5s ease both; }
+.phase-hero::before { content: ''; position: absolute; top: -40px; right: -40px; width: 140px; height: 140px; border-radius: 50%; background: var(--phase-color); opacity: 0.06; }
+.phase-label { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--phase-color); font-weight: 500; margin-bottom: 0.3rem; }
+.phase-name { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 400; color: var(--text); line-height: 1.1; margin-bottom: 0.5rem; }
+.phase-days { font-size: 0.83rem; color: var(--muted); }
+.phase-days strong { color: var(--phase-color); font-weight: 500; }
+.cycle-bar-wrap { margin: 0 1.2rem 1.2rem; animation: fadeUp 0.5s 0.1s ease both; }
+.cycle-bar-label { font-size: 0.72rem; letter-spacing: 0.10em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+.cycle-bar { height: 8px; border-radius: 10px; background: var(--border); overflow: hidden; }
+.cycle-bar-fill { height: 100%; border-radius: 10px; background: var(--phase-color); transition: width 0.8s cubic-bezier(0.4,0,0.2,1); }
+.cycle-bar-phases { display: flex; justify-content: space-between; margin-top: 0.4rem; }
+.cycle-bar-phases span { font-size: 0.68rem; color: var(--muted); }
+.section { margin: 0 1.2rem 1.2rem; animation: fadeUp 0.5s 0.2s ease both; }
+.section-title { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.8rem; font-weight: 500; }
+.tips-scroll { display: flex; gap: 0.8rem; overflow-x: auto; padding-bottom: 0.4rem; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.tips-scroll::-webkit-scrollbar { display: none; }
+.tip-card { flex: 0 0 76vw; max-width: 300px; background: var(--surface); border-radius: 16px; padding: 1.2rem; box-shadow: var(--shadow); scroll-snap-align: start; border-top: 3px solid var(--phase-color); }
+.tip-card .tip-icon { font-size: 1.4rem; margin-bottom: 0.6rem; }
+.tip-card .tip-title { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-weight: 500; margin-bottom: 0.4rem; }
+.tip-card .tip-body { font-size: 0.83rem; color: var(--muted); line-height: 1.6; }
+.expect-card { background: var(--surface); border-radius: 16px; padding: 1.2rem; box-shadow: var(--shadow); }
+.expect-row { display: flex; gap: 0.8rem; padding: 0.7rem 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+.expect-row:last-child { border-bottom: none; padding-bottom: 0; }
+.expect-icon { font-size: 1.1rem; flex-shrink: 0; width: 28px; text-align: center; margin-top: 1px; }
+.expect-text strong { display: block; font-size: 0.82rem; font-weight: 500; margin-bottom: 0.15rem; }
+.expect-text span { font-size: 0.80rem; color: var(--muted); line-height: 1.5; }
+.upcoming-list { display: flex; flex-direction: column; gap: 0.6rem; }
+.upcoming-item { background: var(--surface); border-radius: 12px; padding: 0.9rem 1rem; display: flex; align-items: center; gap: 0.9rem; box-shadow: var(--shadow); }
+.upcoming-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.upcoming-info { flex: 1; }
+.upcoming-info strong { font-size: 0.85rem; font-weight: 500; display: block; }
+.upcoming-info span { font-size: 0.78rem; color: var(--muted); }
+/* MOOD */
+.mood-card { background: var(--surface); border-radius: 16px; padding: 1.3rem; box-shadow: var(--shadow); }
+.mood-emojis { display: flex; justify-content: space-between; margin-bottom: 1rem; }
+.mood-emoji-btn { font-size: 1.8rem; background: none; border: none; cursor: pointer; padding: 0.3rem; border-radius: 50%; transition: transform 0.15s; opacity: 0.45; }
+.mood-emoji-btn.selected { opacity: 1; transform: scale(1.25); }
+.mood-note { width: 100%; border: 1.5px solid var(--border); border-radius: 10px; padding: 0.7rem 0.9rem; font-family: 'Jost', sans-serif; font-size: 0.85rem; color: var(--text); background: var(--bg); outline: none; resize: none; min-height: 56px; transition: border-color 0.2s; }
+.mood-note:focus { border-color: var(--phase-color); }
+.mood-save { margin-top: 0.8rem; width: 100%; padding: 0.75rem; background: var(--phase-color); color: #fff; border: none; border-radius: 10px; font-family: 'Jost', sans-serif; font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: opacity 0.2s; }
+.mood-save:active { opacity: 0.8; }
+.mood-saved { text-align: center; font-size: 0.82rem; color: var(--muted); margin-top: 0.5rem; display: none; }
+/* ACTION BUTTONS */
+.action-btns { display: flex; gap: 0.8rem; margin: 0 1.2rem 1.2rem; }
+.action-btn { flex: 1; padding: 0.8rem; background: var(--surface); border: 1.5px solid var(--border); border-radius: 12px; font-family: 'Jost', sans-serif; font-size: 0.82rem; font-weight: 400; color: var(--text); cursor: pointer; text-align: center; box-shadow: var(--shadow); transition: background 0.15s; }
+.action-btn:active { background: var(--bg); }
+/* PANELS */
+.panel-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 100; align-items: flex-end; }
+.panel-overlay.open { display: flex; }
+.panel-sheet { background: var(--surface); border-radius: 24px 24px 0 0; padding: 1.5rem 1.5rem calc(2rem + env(safe-area-inset-bottom)); width: 100%; max-width: 500px; margin: 0 auto; max-height: 85vh; overflow-y: auto; }
+.panel-sheet h2 { font-size: 1.4rem; font-weight: 300; margin-bottom: 1.2rem; }
+.panel-close { float: right; background: var(--border); border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; }
+/* DIARY */
+.diary-week { margin-bottom: 1.2rem; }
+.diary-week-label { font-size: 0.72rem; letter-spacing: 0.10em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.6rem; font-weight: 500; }
+.diary-entry { display: flex; gap: 0.8rem; padding: 0.7rem 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+.diary-entry:last-child { border-bottom: none; }
+.diary-date { font-size: 0.75rem; color: var(--muted); min-width: 70px; padding-top: 2px; }
+.diary-emoji { font-size: 1.1rem; flex-shrink: 0; }
+.diary-note { font-size: 0.82rem; color: var(--text); line-height: 1.5; }
+.diary-empty { font-size: 0.85rem; color: var(--muted); text-align: center; padding: 2rem 0; }
+/* CHART */
+.chart-wrap { margin-top: 0.5rem; }
+canvas#moodChart { width: 100% !important; border-radius: 12px; }
+.chart-legend { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.8rem; }
+.chart-legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; color: var(--muted); }
+.chart-legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+/* IOS */
+#ios-prompt { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-radius: 20px 20px 0 0; padding: 1.5rem 1.5rem calc(1.5rem + env(safe-area-inset-bottom)); box-shadow: 0 -4px 30px rgba(0,0,0,0.12); z-index: 200; text-align: center; }
+#ios-prompt.show { display: block; }
+#ios-prompt h3 { font-size: 1.2rem; font-weight: 400; margin-bottom: 0.5rem; }
+#ios-prompt p { font-size: 0.83rem; color: var(--muted); line-height: 1.6; margin-bottom: 1rem; }
+#ios-prompt .ios-steps { font-size: 0.82rem; color: var(--text); line-height: 2; }
+#ios-prompt .close-prompt { margin-top: 1rem; background: var(--bg); border: none; border-radius: 12px; padding: 0.7rem 1.5rem; font-family: 'Jost', sans-serif; font-size: 0.85rem; cursor: pointer; color: var(--muted); width: 100%; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+.bottom-space { height: 2rem; }
+</style>
+</head>
+<body>
+
+<div id="ios-prompt">
+  <h3 class="serif">Lägg till på hemskärmen</h3>
+  <p>Installera Cykelkompis som en app på din iPhone.</p>
+  <div class="ios-steps">1. Tryck på <strong>dela-ikonen</strong> (□↑) i Safari<br>2. Välj <strong>"Lägg till på hemskärmen"</strong><br>3. Tryck <strong>"Lägg till"</strong></div>
+  <button class="close-prompt" onclick="dismissIOSPrompt()">Stäng</button>
+</div>
+
+<div id="install-banner">
+  <span>📲 Installera som app</span>
+  <div style="display:flex;gap:0.5rem">
+    <button onclick="installPWA()">Installera</button>
+    <button class="dismiss" onclick="document.getElementById('install-banner').classList.remove('show')">✕</button>
+  </div>
+</div>
+
+<div id="setup-screen">
+  <div class="setup-card">
+    <div class="setup-logo"><h1>Cykelkompis</h1><p>För dig som bryr dig</p></div>
+    <div class="form-group"><label>Hennes namn</label><input type="text" id="input-name" placeholder="t.ex. Elin" /></div>
+    <div class="form-group"><label>Senaste mens startade</label><input type="date" id="input-start" /><p class="form-hint">Dag 1 av hennes senaste cykel</p></div>
+    <div class="form-group"><label>Cykellängd (dagar)</label><input type="number" id="input-length" placeholder="28" min="21" max="40" value="28" /><p class="form-hint">De flesta har 21–35 dagar. Vet du inte — kör 28.</p></div>
+    <button class="btn-primary" onclick="setupApp()">Kom igång →</button>
+  </div>
+</div>
+
+<div id="app-screen">
+  <div class="top-bar">
+    <span class="app-name">Cykelkompis <span style="font-size:0.65rem;font-family:'Jost',sans-serif;font-weight:400;color:var(--muted);letter-spacing:0.08em;vertical-align:middle;">v0.4</span></span>
+    <div style="display:flex;gap:0.5rem;align-items:center">
+      <div class="settings-btn" id="add-to-home-btn" onclick="showInstallPrompt()" style="display:none">📲</div>
+      <div class="settings-btn" onclick="openSettings()">⚙️</div>
+    </div>
+  </div>
+  <div class="date-display" id="date-display"></div>
+
+  <div class="phase-hero">
+    <div class="phase-label" id="phase-label"></div>
+    <div class="phase-name" id="phase-name"></div>
+    <div class="phase-days" id="phase-days"></div>
+  </div>
+
+  <div class="cycle-bar-wrap">
+    <div class="cycle-bar-label">Dag <span id="cycle-day-num">1</span> av <span id="cycle-total">28</span></div>
+    <div class="cycle-bar"><div class="cycle-bar-fill" id="cycle-fill"></div></div>
+    <div class="cycle-bar-phases"><span>Mens</span><span>Follikulär</span><span>Ägglossning</span><span>Luteal</span></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Hur verkar hon må idag?</div>
+    <div class="mood-card">
+      <div class="mood-emojis">
+        <button class="mood-emoji-btn" data-val="1" onclick="selectMood(1)">😞</button>
+        <button class="mood-emoji-btn" data-val="2" onclick="selectMood(2)">😕</button>
+        <button class="mood-emoji-btn" data-val="3" onclick="selectMood(3)">😐</button>
+        <button class="mood-emoji-btn" data-val="4" onclick="selectMood(4)">🙂</button>
+        <button class="mood-emoji-btn" data-val="5" onclick="selectMood(5)">😊</button>
+      </div>
+      <textarea class="mood-note" id="mood-note" placeholder="Valfri anteckning…" rows="2"></textarea>
+      <button class="mood-save" id="mood-save-btn" onclick="saveMood()">Spara</button>
+      <div class="mood-saved" id="mood-saved">✓ Sparat!</div>
+    </div>
+  </div>
+
+  <div class="action-btns">
+    <button class="action-btn" onclick="openDiary()">📓 Dagbok</button>
+    <button class="action-btn" onclick="openChart()">📈 Graf</button>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Tips för dig idag</div>
+    <div class="tips-scroll" id="tips-container"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Vad du kan förvänta dig</div>
+    <div class="expect-card" id="expect-container"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Kommande faser</div>
+    <div class="upcoming-list" id="upcoming-container"></div>
+  </div>
+  <div class="bottom-space"></div>
+</div>
+
+<!-- SETTINGS -->
+<div class="panel-overlay" id="settings-panel">
+  <div class="panel-sheet">
+    <button class="panel-close" onclick="closeSettings()">✕</button>
+    <h2 class="serif">Inställningar</h2>
+    <div class="form-group"><label>Namn</label><input type="text" id="settings-name" /></div>
+    <div class="form-group"><label>Senaste mens startade</label><input type="date" id="settings-start" /></div>
+    <div class="form-group"><label>Mensen slutade</label><input type="date" id="settings-end" /><p class="form-hint">Valfritt — förbättrar precisionen</p></div>
+    <div class="form-group"><label>Ägglossning startade</label><input type="date" id="settings-ovulation" /><p class="form-hint">Valfritt — förbättrar precisionen</p></div>
+    <div class="form-group"><label>Cykellängd (dagar)</label><input type="number" id="settings-length" min="21" max="40" /></div>
+    <button class="btn-primary" onclick="saveSettings()">Spara ändringar</button>
+  </div>
+</div>
+
+<!-- DIARY -->
+<div class="panel-overlay" id="diary-panel">
+  <div class="panel-sheet">
+    <button class="panel-close" onclick="closeDiary()">✕</button>
+    <h2 class="serif">Dagbok</h2>
+    <div id="diary-content"></div>
+  </div>
+</div>
+
+<!-- CHART -->
+<div class="panel-overlay" id="chart-panel">
+  <div class="panel-sheet">
+    <button class="panel-close" onclick="closeChart()">✕</button>
+    <h2 class="serif">Humörgraf</h2>
+    <div class="chart-wrap">
+      <canvas id="moodChart" height="200"></canvas>
+      <div class="chart-legend">
+        <div class="chart-legend-item"><div class="chart-legend-dot" style="background:#A63D2F"></div>Mens</div>
+        <div class="chart-legend-item"><div class="chart-legend-dot" style="background:#3D7A5E"></div>Follikulär</div>
+        <div class="chart-legend-item"><div class="chart-legend-dot" style="background:#B8860B"></div>Ägglossning</div>
+        <div class="chart-legend-item"><div class="chart-legend-dot" style="background:#6B5B8A"></div>Luteal</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const PHASES = {
+  menstrual: {
+    name: 'Mensfas', label: 'Dag 1–5 · Mens', hex: '#A63D2F', hexLight: '#F7EDEB',
+    summary: 'Om X dagar. Lägre energi och kramper möjligt. Var extra omtänksam.',
+    tips: [
+      {icon:'🛁',title:'Värme hjälper',body:'En värmekudde eller varm dusch kan lindra kramper. Fråga om hon vill ha en.'},
+      {icon:'🍫',title:'Mörk choklad',body:'Magnesium i mörk choklad kan minska kramper. Köp lite utan att fråga.'},
+      {icon:'🤫',title:'Läs av humöret',body:'Hon kanske vill vara ifred eller nära dig. Fråga — gissa inte.'},
+      {icon:'💊',title:'Smärtstillande',body:'Ibuprofen mot kramper fungerar bäst om man tar det lite innan smärtan toppar.'},
+      {icon:'🛌',title:'Sänk kraven',body:'Energin är låg. Om du kan ta middagen eller disken idag — gör det.'},
+      {icon:'🎬',title:'Mysfilm-kväll',body:'Föreslå film och kuddar på soffan. Låt henne välja.'},
+      {icon:'🚿',title:'Varm dusch',body:'Erbjud att fixa en varm, lugn dusch. Enkelt men uppskattat.'},
+      {icon:'🧴',title:'Värktabletter hemma',body:'Se till att det finns smärtstillande hemma. Undviker stressig apoteksrunda.'},
+      {icon:'🍵',title:'Varm dryck',body:'Te med ingefära eller kamomillte kan lugna kramper. Koka utan att fråga.'},
+      {icon:'🤐',title:'Argumentera inte',body:'Hormoner påverkar känslighet. Skjut upp svåra samtal till efter fasen.'},
+      {icon:'🛍️',title:'Mens-kit',body:'Ha alltid tamponger/bindor hemma. Att slippa fråga eller handla är en lättnad.'},
+      {icon:'😴',title:'Låt henne sova',body:'Extra sömn är läkande nu. Undvik att störa tidiga mornar om möjligt.'},
+      {icon:'🍲',title:'Laga mat',body:'Energin räcker sällan till matlagning. Laga något enkelt utan att göra affär av det.'},
+      {icon:'📵',title:'Minska intryck',body:'En lugn hemmiljö utan stress hjälper mer än du tror just nu.'},
+      {icon:'🙌',title:'Beröring utan krav',body:'En hand på ryggen eller en kram utan förväntan kan räcka långt.'},
+      {icon:'🧠',title:'Förstå biologin',body:'Livmodern drar ihop sig. Det är verklig smärta — inte dramatik.'},
+      {icon:'🚗',title:'Kör om hon behöver',body:'Erbjud att köra till apoteket, affären eller bara någonstans.'},
+      {icon:'🎧',title:'Ge henne lugn',body:'Om hon vill ha tyst — respektera det. Det är inte personligt.'},
+      {icon:'🌡️',title:'Feber kan dyka upp',body:'Lite förhöjd kroppstemperatur är normalt under mensfasen.'},
+      {icon:'🍌',title:'Kalium hjälper',body:'Banan kan minska kramper och uppblåsthet. Ha gärna hemma.'},
+      {icon:'💧',title:'Påminn om vatten',body:'Dehydrering förvärrar kramper. Ställ fram ett glas utan att tjata.'},
+      {icon:'🧘',title:'Ingen tränings-press',body:'Pressa inte på träning nu. Lugna promenader är okej om hon vill.'},
+      {icon:'🌸',title:'Berätta att du bryr dig',body:'Säg det. "Hur mår du?" — enkelt och betydelsefullt.'},
+      {icon:'🎵',title:'Musik hjälper',body:'Lugn musik i bakgrunden kan sänka stresspåslag vid kramper.'},
+      {icon:'📺',title:'Hennes val',body:'Låt henne bestämma vad ni tittar på ikväll. Inga förhandlingar.'},
+      {icon:'🧺',title:'Ta tvätten',body:'Gör det utan att nämna det. Det märks.'},
+      {icon:'🤝',title:'Fråga konkret',body:'"Vill du att jag är nära eller ger dig utrymme?" är bättre än "Är du okej?"'},
+      {icon:'🌙',title:'Kvällsrutinen',body:'En lugn kväll utan stress är det bästa du kan ge nu.'},
+      {icon:'💬',title:'Lyssna aktivt',body:'Om hon pratar — lyssna. Kom inte med lösningar om hon inte ber om dem.'},
+      {icon:'❤️',title:'Du gör skillnad',body:'Att du ens tänker på det här gör dig till en bättre partner. Kom ihåg det.'},
+    ],
+    expect: [
+      {icon:'😔',label:'Humör',text:'Kan vara mer känslosam, trött eller irriterad. Normalt — inte riktat mot dig.'},
+      {icon:'😴',label:'Energi',text:'Kroppen jobbar hårt. Trötthet är vanligt.'},
+      {icon:'🌡️',label:'Fysiskt',text:'Kramper, ryggont, huvudvärk och uppblåsthet är vanliga symptom.'},
+      {icon:'🤝',label:'Vad hon behöver',text:'Närvaro utan krav. Fråga vad som hjälper.'},
+    ]
+  },
+  follicular: {
+    name: 'Follikulär fas', label: 'Dag 6–13 · Uppbyggnad', hex: '#3D7A5E', hexLight: '#E8F3EE',
+    summary: 'Om X dagar. Stabilare humör och mer energi. Bra tid att planera.',
+    tips: [
+      {icon:'🚀',title:'Hon är på gång',body:'Energin stiger. Bra tillfälle att planera roliga saker tillsammans.'},
+      {icon:'💬',title:'Öppen för samtal',body:'Hon är mer social och kommunikativ nu. Bra tid för viktiga snack.'},
+      {icon:'🎯',title:'Stöd hennes ambitioner',body:'Östrogenet stiger och hon känner sig mer motiverad. Uppmuntra det.'},
+      {icon:'🏃',title:'Aktiv tid',body:'Om ni tränar tillsammans — hon orkar mer nu och gillar att pushas lite.'},
+      {icon:'🍽️',title:'Boka middag',body:'Hon är mer social nu. Föreslå något ni kan göra ihop ute.'},
+      {icon:'🧠',title:'Stimulerande samtal',body:'Hjärnan är skarp. Hon uppskattar djupa och intressanta diskussioner.'},
+      {icon:'🌿',title:'Ny energi',body:'Östrogenet bygger upp kroppen. Hon återhämtar sig snabbt nu.'},
+      {icon:'🎨',title:'Kreativ tid',body:'Hjärnan är mer kreativ i follikulärfasen. Stöd projekt och idéer.'},
+      {icon:'📅',title:'Planera framåt',body:'Det här är rätt tid att planera resor, middagar och roliga aktiviteter.'},
+      {icon:'🤸',title:'Rör på er',body:'Promenader, träning, dans — kroppen vill röra sig nu.'},
+      {icon:'💡',title:'Lyssna på hennes idéer',body:'Hon är mer idérik nu. Lyssna noga — det kan vara guld.'},
+      {icon:'🌅',title:'Morgonhumör bättre',body:'Morgnarna är lättare nu. Passa på att göra saker tidigt.'},
+      {icon:'👗',title:'Hon mår bra i sin kropp',body:'Östrogen gör att hon ofta känner sig mer attraktiv. Bekräfta det.'},
+      {icon:'🎉',title:'Socialt läge',body:'Om hon vill träffa vänner — uppmuntra det. Det laddar hennes batteri.'},
+      {icon:'📚',title:'Ny kunskap',body:'Hon är mottaglig för ny information och lärande just nu.'},
+      {icon:'🌱',title:'Sätt mål tillsammans',body:'Prata om vad ni vill uppnå. Hon är mer optimistisk och framtidsorienterad nu.'},
+      {icon:'😄',title:'Lek och skratt',body:'Humöret är lättare. Var rolig, lek lite — det funkar nu.'},
+      {icon:'🏡',title:'Hem-projekt',body:'Om ni har något att fixa hemma — nu är hon mer energisk för det.'},
+      {icon:'🧩',title:'Problemlösning',body:'Hjärnan är skarp på logik nu. Bra tid att lösa saker ihop.'},
+      {icon:'☀️',title:'Ut i friska luften',body:'Energin passar för utomhusaktiviteter. Föreslå en promenad.'},
+      {icon:'🎶',title:'Musik och dans',body:'Hon är mer mottaglig för glädjefyllda aktiviteter. Dansa i köket.'},
+      {icon:'💌',title:'Säg något fint',body:'Hon tar emot uppskattning väl nu. Berätta vad du uppskattar med henne.'},
+      {icon:'🌍',title:'Planera äventyr',body:'Föreslå något nytt att uppleva — en ny plats, aktivitet eller restaurang.'},
+      {icon:'🤲',title:'Var engagerad',body:'Hon vill ha en partner som är med på banan. Visa intresse för hennes liv.'},
+      {icon:'🧗',title:'Utmana henne',body:'I god mening — pressa henne lite mot mål. Hon klarar mer nu.'},
+      {icon:'🛒',title:'Handla tillsammans',body:'Vardagliga sysslor känns roligare när man gör dem ihop nu.'},
+      {icon:'📷',title:'Ta bilder',body:'Hon mår bra. Fånga stunder tillsammans.'},
+      {icon:'🎁',title:'Överraska',body:'En liten överraskning landar extra bra när hon är i bra humör.'},
+      {icon:'🔋',title:'Hennes batteri laddat',body:'Passa på att be om saker nu — hon har kapacitet att hjälpa.'},
+      {icon:'❤️',title:'Investera i relationen',body:'Det här är en av de bästa faserna för att stärka er relation. Var present.'},
+    ],
+    expect: [
+      {icon:'😊',label:'Humör',text:'Mer optimistisk, social och energisk. Östrogenet stiger.'},
+      {icon:'⚡',label:'Energi',text:'Stigande energi — hon mår ofta som bäst under den här fasen.'},
+      {icon:'💪',label:'Fysiskt',text:'Kroppen återhämtar sig. Smärta och obehag minskar.'},
+      {icon:'🤝',label:'Vad hon behöver',text:'Gemenskap, planering, äventyr. Föreslå något ni kan göra.'},
+    ]
+  },
+  ovulation: {
+    name: 'Ägglossningsfas', label: 'Dag 14–17 · Topp', hex: '#B8860B', hexLight: '#FBF5E0',
+    summary: 'Om X dagar. Hon är på topp — energisk, öppen och nära. Var present.',
+    tips: [
+      {icon:'✨',title:'Hon strålar',body:'Östrogen och testosteron är på topp. Mer utåtriktad och självsäker.'},
+      {icon:'❤️',title:'Intim tid',body:'Libido är ofta som högst nu. Var uppmärksam och lyhörd.'},
+      {icon:'🗣️',title:'Kommunikation i topp',body:'Bra tid för djupare samtal — hon är mer empatisk och verbal nu.'},
+      {icon:'🌸',title:'Berätta vad du uppskattar',body:'Hon tar emot komplimanger och kärlek extra bra nu.'},
+      {icon:'🌍',title:'Hitta på något',body:'Energin är hög. Föreslå något spontant — en utflykt, en ny restaurang.'},
+      {icon:'📸',title:'Fånga stunden',body:'Hon mår ofta som bäst fysiskt nu. Ta en bild tillsammans.'},
+      {icon:'🔥',title:'Maxad energi',body:'Det här är cykelns topp. Hon kan vara mer driftig och initiativtagande.'},
+      {icon:'💃',title:'Dans och rörelse',body:'Kroppen är stark och koordinerad. Föreslå något aktivt och roligt.'},
+      {icon:'🧲',title:'Naturlig dragningskraft',body:'Feromoner och hormon-topp gör henne extra attraktiv. Säg det.'},
+      {icon:'🎤',title:'Hon vill höras',body:'Hennes röst är mer välljudande nu och hon tar mer plats. Ge henne det utrymmet.'},
+      {icon:'🤝',title:'Teamwork',body:'Hon är samarbetsvillig och empatisk nu. Bra tid att lösa saker ihop.'},
+      {icon:'🌟',title:'Bekräfta hennes styrka',body:'Berätta vad du ser i henne. Hon tar emot det djupare nu.'},
+      {icon:'🏖️',title:'Spontanitet',body:'Föreslå något oplanerat. Hon är mer öppen för spontana idéer nu.'},
+      {icon:'💬',title:'Prata om framtiden',body:'Bra tid för konstruktiva samtal om relationen och framtiden.'},
+      {icon:'👀',title:'Var uppmärksam',body:'Visa att du ser henne — inte bara lyssnar, utan verkligen ser.'},
+      {icon:'🎯',title:'Hon tar beslut bra',body:'Hjärnan är skarp och beslutsam. Bra tid för gemensamma beslut.'},
+      {icon:'🌺',title:'Ge blommor',body:'Eller något litet. Det slår extra hårt när hon är mottaglig.'},
+      {icon:'🍷',title:'Romantisk kväll',body:'Planera något litet romantiskt. Det kommer att uppskattas extra nu.'},
+      {icon:'💪',title:'Träna ihop',body:'Hon är stark och uthållig nu. Träna tillsammans om möjligt.'},
+      {icon:'🎊',title:'Fira något',body:'Hitta en anledning att fira — stort eller litet. Hon är i rätt humör.'},
+      {icon:'🧡',title:'Visa kärlek öppet',body:'Nu är rätt tid att vara extra öppen med dina känslor.'},
+      {icon:'🌙',title:'Kvalitetstid',body:'Lägg undan telefonen ikväll. Full närvaro uppskattas extra nu.'},
+      {icon:'🎭',title:'Upplev något nytt',body:'Teater, konsert, matupplevelse — hon är öppen för intryck nu.'},
+      {icon:'🏃',title:'Tävla lite',body:'En liten utmaning kan vara extra kul nu — hon älskar att prestera.'},
+      {icon:'🌈',title:'Var positiv',body:'Din energi smittar av sig. Kom med glädje och optimism.'},
+      {icon:'🤗',title:'Krama länge',body:'En lång, varm kram utan agenda laddar hennes oxytocin-batteri.'},
+      {icon:'📝',title:'Skriv ett meddelande',body:'Skicka ett oväntat, ärligt meddelande mitt på dagen. Det slår hårt.'},
+      {icon:'🔑',title:'Visa tillit',body:'Visa att du litar på henne och hennes omdöme. Det stärker ert band.'},
+      {icon:'🎵',title:'Dela musik',body:'Spela en låt du vet att hon gillar. Oväntade gester fastnar.'},
+      {icon:'❤️',title:'Närvaro är allt',body:'Under ägglossning är hon som mest mottaglig för kärlek. Var där.'},
+    ],
+    expect: [
+      {icon:'🌟',label:'Humör',text:'Mer självsäker, glad och social. Hormonerna är på topp.'},
+      {icon:'🔥',label:'Energi',text:'Högsta energinivån i cykeln. Kan vilja göra mycket.'},
+      {icon:'🌡️',label:'Fysiskt',text:'Kan ha lätt midjevärk vid ägglossning. Kortvarigt.'},
+      {icon:'🤝',label:'Vad hon behöver',text:'Närvaro, uppskattning och gemenskap.'},
+    ]
+  },
+  luteal: {
+    name: 'Lutealfas', label: 'Dag 18–28 · Nedgång', hex: '#6B5B8A', hexLight: '#EEE9F8',
+    summary: 'Om X dagar. Energin sjunker och PMS möjligt. Ha tålamod.',
+    tips: [
+      {icon:'🧘',title:'Sänk tempot',body:'Energin minskar mot slutet. Låt henne sätta tempot.'},
+      {icon:'🍲',title:'Komfortmat',body:'Sug efter kolhydrater och sötsaker är hormonellt — inte svagheter. Döm inte.'},
+      {icon:'👂',title:'Lyssna mer, fixa mindre',body:'PMS-känslor är verkliga. Hon behöver bli hörd, inte problemlöst.'},
+      {icon:'😤',title:'Irritation är normalt',body:'Progesteronnivåerna påverkar humöret. Var tålmodig — det handlar inte om dig.'},
+      {icon:'🌙',title:'Sömn är viktigt',body:'Hormonerna kan störa sömnen. Skapa en lugn miljö hemma.'},
+      {icon:'🛒',title:'Handla utan att fråga',body:'Fyll på med hennes favoritsaker hemma. Det märks mer än du tror.'},
+      {icon:'🤗',title:'Kramas mer',body:'Fysisk närhet utan krav kan hjälpa mer än ord under den här fasen.'},
+      {icon:'📵',title:'Ingen extra stress',body:'Undvik att ta upp belastande ämnen eller diskussioner nu.'},
+      {icon:'🎬',title:'Mysig kväll',body:'En lugn film-kväll hemma är ofta precis vad som behövs nu.'},
+      {icon:'🍫',title:'Choklad hjälper',body:'Mörk choklad höjer serotonin. Ha det hemma utan att göra en grej av det.'},
+      {icon:'💆',title:'Massage',body:'Erbjud en enkel axel- eller ryggmassage. Utan krav.'},
+      {icon:'🤐',title:'Välj dina strider',body:'Saker som irriterar henne nu kanske inte ens nämns nästa vecka. Låt det gå.'},
+      {icon:'🧸',title:'Comfort-objekt',body:'Plocka fram hennes favoritfilt eller kudde. Liten gest, stor effekt.'},
+      {icon:'☕',title:'Koka kaffe eller te',body:'Gör hennes favoritdryck utan att bli tillfrågad. Enkelt och omtänksamt.'},
+      {icon:'🌿',title:'Frisk luft',body:'En kort promenad kan lyfta humöret om hon är med på det. Föreslå varsamt.'},
+      {icon:'📱',title:'Kolla in',body:'Skicka ett enkelt "Hur mår du?" under dagen. Det räcker långt.'},
+      {icon:'🏠',title:'Håll det lugnt hemma',body:'En lugn hemmiljö utan oordning sänker stressnivån märkbart.'},
+      {icon:'🎵',title:'Lugn musik',body:'Bakgrundsmusik med lugnt tempo kan sänka irritation.'},
+      {icon:'💤',title:'Låt henne vila',body:'Om hon vill sova tidigt — låt henne. Stör inte med ljud.'},
+      {icon:'🍵',title:'Hallonbladsté',body:'Kan lindra PMS-symptom. Värt att ha hemma.'},
+      {icon:'🌊',title:'Känslorna svämmar över',body:'Hon kan gråta utan tydlig anledning. Krama — fråga inte varför.'},
+      {icon:'🤝',title:'Bekräfta hennes känslor',body:'"Det låter jobbigt" är bättre än "men det är väl inte så farligt".'},
+      {icon:'📋',title:'Ta ansvar',body:'Hantera fler praktiska saker utan att behöva bli tillfrågad.'},
+      {icon:'🌙',title:'Förutsägbar kväll',body:'En lugn, förutsägbar kväll hjälper hjärnan att landa.'},
+      {icon:'🧠',title:'Det är biologiskt',body:'Progesteron sänker serotonin på riktigt. Det är kemi — inte karaktärsbrist.'},
+      {icon:'🎯',title:'Låg förväntansnivå',body:'Planera inte krävande sociala evenemang under lutealfasens sista dagar.'},
+      {icon:'💬',title:'Prata på rätt tid',body:'Vänta med svåra samtal till follikulärfasen. Nu är det inte rätt timing.'},
+      {icon:'🌱',title:'Det vänder snart',body:'Påminn dig om att mensfasen börjar om några dagar. Håll ut.'},
+      {icon:'👁️',title:'Se henne',body:'Även när hon är på sitt sämsta — visa att du ser mer än humöret.'},
+      {icon:'❤️',title:'Kärlek är ett val',body:'Att välja att vara omtänksam nu, när det är svårast — det är kärlek.'},
+    ],
+    expect: [
+      {icon:'🌧️',label:'Humör',text:'Mer känslosam, irritabel eller nedstämd i slutet av fasen (PMS). Normalt.'},
+      {icon:'📉',label:'Energi',text:'Sjunkande energi, speciellt de sista dagarna.'},
+      {icon:'😣',label:'Fysiskt',text:'Uppblåsthet, ömma bröst, huvudvärk, sötsug och sömnproblem är vanliga.'},
+      {icon:'🤝',label:'Vad hon behöver',text:'Tålamod, förståelse och att du inte tar humörsvängningarna personligt.'},
+    ]
+  }
+};
+
+// TIP ROTATION
+function getSessionTips(phase, count=3) {
+  const key = 'cc_tip_' + phase.name;
+  const idx = parseInt(sessionStorage.getItem(key) || Math.floor(Math.random()*phase.tips.length));
+  const result = [];
+  for (let i=0; i<count; i++) result.push(phase.tips[(idx+i)%phase.tips.length]);
+  sessionStorage.setItem(key, (idx+1)%phase.tips.length);
+  return result;
+}
+
+// PHASE LOGIC
+function getMensDuration() {
+  const start = localStorage.getItem('cc_start'), end = localStorage.getItem('cc_mens_end');
+  if (!start||!end) return 5;
+  const diff = Math.round((new Date(end)-new Date(start))/86400000);
+  return diff>0&&diff<10?diff:5;
+}
+function getOvStart() {
+  const start = localStorage.getItem('cc_start'), ov = localStorage.getItem('cc_ovulation');
+  if (!start||!ov) return null;
+  const diff = Math.round((new Date(ov)-new Date(start))/86400000)+1;
+  return diff>5&&diff<25?diff:null;
+}
+function getCurrentPhase(day, len, mEnd, ovS) {
+  const mensEnd=mEnd||5, follEnd=ovS?ovS-1:Math.round(len*0.46), ovEnd=ovS?ovS+3:follEnd+4;
+  if (day<=mensEnd) return {phase:'menstrual',start:1,end:mensEnd};
+  if (day<=follEnd) return {phase:'follicular',start:mensEnd+1,end:follEnd};
+  if (day<=ovEnd)   return {phase:'ovulation',start:follEnd+1,end:ovEnd};
+  return {phase:'luteal',start:ovEnd+1,end:len};
+}
+function getDayOfCycle(startDate, len) {
+  const s=new Date(startDate); s.setHours(0,0,0,0);
+  const n=new Date(); n.setHours(0,0,0,0);
+  const diff=Math.floor((n-s)/86400000);
+  return ((diff%len)+len)%len+1;
+}
+function getUpcoming(cycleDay, len, mEnd, ovS) {
+  const phases=['menstrual','follicular','ovulation','luteal'];
+  const mensEnd=mEnd||5, follEnd=ovS?ovS-1:Math.round(len*0.46), ovEnd=ovS?ovS+3:follEnd+4;
+  const bounds=[mensEnd,follEnd,ovEnd,len];
+  const names={menstrual:'Mensfas',follicular:'Follikulär fas',ovulation:'Ägglossning',luteal:'Lutealfas'};
+  const dots={menstrual:'#A63D2F',follicular:'#3D7A5E',ovulation:'#B8860B',luteal:'#6B5B8A'};
+  const results=[]; let day=cycleDay;
+  let cur=getCurrentPhase(day,len,mEnd,ovS); const seen=new Set([cur.phase]);
+  for (let i=0;i<4;i++) {
+    let nd=bounds[phases.indexOf(cur.phase)]+1; if(nd>len)nd=1;
+    const next=getCurrentPhase(nd,len,mEnd,ovS);
+    if(seen.has(next.phase))break;
+    const du=(nd-cycleDay+len)%len||len;
+    results.push({phase:next.phase,name:names[next.phase],dot:dots[next.phase],daysUntil:du,summary:PHASES[next.phase].summary});
+    seen.add(next.phase); cur=next; day=nd;
+  }
+  return results;
+}
+
+// MOOD
+let selectedMood=null;
+function selectMood(val) {
+  selectedMood=val;
+  document.querySelectorAll('.mood-emoji-btn').forEach(b=>b.classList.toggle('selected',parseInt(b.dataset.val)===val));
+}
+function todayKey() {
+  const t=new Date();
+  return `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
+}
+function getMoodLog() { try{return JSON.parse(localStorage.getItem('cc_mood_log')||'{}')}catch{return{}} }
+function getCurrentPhaseName() {
+  const start=localStorage.getItem('cc_start'),len=parseInt(localStorage.getItem('cc_length'))||28;
+  if(!start)return'luteal';
+  return getCurrentPhase(getDayOfCycle(start,len),len,getMensDuration(),getOvStart()).phase;
+}
+function saveMood() {
+  if(!selectedMood){alert('Välj ett humör först.');return;}
+  const note=document.getElementById('mood-note').value.trim();
+  const log=getMoodLog(); log[todayKey()]={mood:selectedMood,note,phase:getCurrentPhaseName()};
+  localStorage.setItem('cc_mood_log',JSON.stringify(log));
+  const el=document.getElementById('mood-saved'); el.style.display='block';
+  setTimeout(()=>el.style.display='none',2000);
+}
+
+// DIARY
+const EMOJI_MAP={1:'😞',2:'😕',3:'😐',4:'🙂',5:'😊'};
+function openDiary() {
+  const log=getMoodLog(), keys=Object.keys(log).sort((a,b)=>b.localeCompare(a));
+  const el=document.getElementById('diary-content');
+  if(!keys.length){el.innerHTML='<div class="diary-empty">Inga anteckningar ännu.<br>Börja logga ikväll!</div>';document.getElementById('diary-panel').classList.add('open');return;}
+  const weeks={};
+  keys.forEach(k=>{
+    const d=new Date(k),monday=new Date(d);monday.setDate(d.getDate()-((d.getDay()+6)%7));
+    const wk=monday.toISOString().slice(0,10);
+    if(!weeks[wk])weeks[wk]=[];
+    weeks[wk].push({key:k,...log[k]});
+  });
+  el.innerHTML=Object.keys(weeks).sort((a,b)=>b.localeCompare(a)).map(wk=>{
+    const m=new Date(wk),s=new Date(wk);s.setDate(m.getDate()+6);
+    const fmt=d=>d.toLocaleDateString('sv-SE',{day:'numeric',month:'short'});
+    const entries=weeks[wk].map(e=>{
+      const dn=new Date(e.key).toLocaleDateString('sv-SE',{weekday:'short',day:'numeric',month:'short'});
+      return `<div class="diary-entry"><div class="diary-date">${dn}</div><div class="diary-emoji">${EMOJI_MAP[e.mood]}</div><div class="diary-note">${e.note||'<span style="color:var(--muted);font-style:italic">Ingen anteckning</span>'}</div></div>`;
+    }).join('');
+    return `<div class="diary-week"><div class="diary-week-label">${fmt(m)} – ${fmt(s)}</div>${entries}</div>`;
+  }).join('');
+  document.getElementById('diary-panel').classList.add('open');
+}
+function closeDiary(){document.getElementById('diary-panel').classList.remove('open');}
+
+// CHART
+let chartInstance=null;
+function openChart(){document.getElementById('chart-panel').classList.add('open');setTimeout(renderChart,150);}
+function closeChart(){document.getElementById('chart-panel').classList.remove('open');}
+function renderChart() {
+  const log=getMoodLog(),start=localStorage.getItem('cc_start'),len=parseInt(localStorage.getItem('cc_length'))||28;
+  const mEnd=getMensDuration(),ovS=getOvStart();
+  const keys=Object.keys(log).sort();
+  const canvas=document.getElementById('moodChart'),ctx=canvas.getContext('2d');
+  const W=canvas.offsetWidth||300,H=200;
+  canvas.width=W*devicePixelRatio;canvas.height=H*devicePixelRatio;
+  ctx.scale(devicePixelRatio,devicePixelRatio);
+  const pad={top:20,right:20,bottom:30,left:28};
+  const cw=W-pad.left-pad.right,ch=H-pad.top-pad.bottom;
+  ctx.clearRect(0,0,W,H);
+  if(!keys.length){ctx.fillStyle='#8A8178';ctx.font='13px Jost,sans-serif';ctx.textAlign='center';ctx.fillText('Ingen data ännu',W/2,H/2);return;}
+  const values=keys.map(k=>log[k].mood);
+  const bw=cw/Math.max(keys.length,1);
+  // Phase background bars
+  keys.forEach((k,i)=>{
+    if(!start)return;
+    const d=new Date(k);d.setHours(0,0,0,0);
+    const s=new Date(start);s.setHours(0,0,0,0);
+    const diff=Math.floor((d-s)/86400000);
+    const day=((diff%len)+len)%len+1;
+    const ph=getCurrentPhase(day,len,mEnd,ovS).phase;
+    const c={menstrual:'#A63D2F',follicular:'#3D7A5E',ovulation:'#B8860B',luteal:'#6B5B8A'};
+    ctx.fillStyle=c[ph]+'28';
+    ctx.fillRect(pad.left+i*bw,pad.top,bw,ch);
+  });
+  // Grid
+  for(let v=1;v<=5;v++){
+    const y=pad.top+ch-((v-1)/4)*ch;
+    ctx.strokeStyle='#EAE5DF';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(pad.left,y);ctx.lineTo(pad.left+cw,y);ctx.stroke();
+    ctx.fillStyle='#8A8178';ctx.font='11px Jost,sans-serif';ctx.textAlign='right';
+    ctx.fillText(EMOJI_MAP[v],pad.left-2,y+4);
+  }
+  // Line
+  if(values.length>1){
+    ctx.strokeStyle='#1C1814';ctx.lineWidth=2;ctx.lineJoin='round';
+    ctx.beginPath();
+    values.forEach((v,i)=>{const x=pad.left+i*bw+bw/2,y=pad.top+ch-((v-1)/4)*ch;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
+    ctx.stroke();
+  }
+  // Dots
+  values.forEach((v,i)=>{
+    const x=pad.left+i*bw+bw/2,y=pad.top+ch-((v-1)/4)*ch;
+    ctx.fillStyle='#1C1814';ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fill();
+  });
+  // X labels
+  ctx.fillStyle='#8A8178';ctx.font='9px Jost,sans-serif';ctx.textAlign='center';
+  keys.forEach((k,i)=>{
+    if(i%Math.ceil(keys.length/6)===0){
+      const d=new Date(k);
+      ctx.fillText(d.toLocaleDateString('sv-SE',{day:'numeric',month:'short'}),pad.left+i*bw+bw/2,H-6);
+    }
+  });
+}
+
+// APP
+function setupApp(){
+  const name=document.getElementById('input-name').value.trim()||'henne';
+  const start=document.getElementById('input-start').value;
+  const length=parseInt(document.getElementById('input-length').value)||28;
+  if(!start){alert('Fyll i startdatum för senaste mens.');return;}
+  localStorage.setItem('cc_name',name);localStorage.setItem('cc_start',start);localStorage.setItem('cc_length',length);
+  loadApp();
+}
+function loadApp(){
+  const name=localStorage.getItem('cc_name')||'henne';
+  const start=localStorage.getItem('cc_start');
+  const length=parseInt(localStorage.getItem('cc_length'))||28;
+  if(!start)return;
+  const mEnd=getMensDuration(),ovS=getOvStart();
+  document.getElementById('setup-screen').style.display='none';
+  document.getElementById('app-screen').style.display='block';
+  const cycleDay=getDayOfCycle(start,length);
+  const phaseInfo=getCurrentPhase(cycleDay,length,mEnd,ovS);
+  const phase=PHASES[phaseInfo.phase];
+  document.documentElement.style.setProperty('--phase-color',phase.hex);
+  document.documentElement.style.setProperty('--phase-light',phase.hexLight);
+  const today=new Date();
+  const ds=today.toLocaleDateString('sv-SE',{weekday:'long',day:'numeric',month:'long'});
+  document.getElementById('date-display').textContent=ds.charAt(0).toUpperCase()+ds.slice(1);
+  const capName=name.charAt(0).toUpperCase()+name.slice(1);
+  document.getElementById('phase-label').textContent=`${capName}s cykel · ${phase.label}`;
+  document.getElementById('phase-name').textContent=phase.name;
+  const daysLeft=phaseInfo.end-cycleDay+1;
+  document.getElementById('phase-days').innerHTML=`<strong>${daysLeft} dag${daysLeft!==1?'ar':''}</strong> kvar i fasen`;
+  document.getElementById('cycle-day-num').textContent=cycleDay;
+  document.getElementById('cycle-total').textContent=length;
+  document.getElementById('cycle-fill').style.width=((cycleDay/length)*100)+'%';
+  document.getElementById('mood-save-btn').style.background=phase.hex;
+  // Load today's mood
+  const log=getMoodLog(),entry=log[todayKey()];
+  if(entry){selectMood(entry.mood);document.getElementById('mood-note').value=entry.note||'';}
+  // Tips
+  document.getElementById('tips-container').innerHTML=getSessionTips(phase,3).map(t=>
+    `<div class="tip-card"><div class="tip-icon">${t.icon}</div><div class="tip-title">${t.title}</div><div class="tip-body">${t.body}</div></div>`
+  ).join('');
+  // Expect
+  document.getElementById('expect-container').innerHTML=phase.expect.map(e=>
+    `<div class="expect-row"><div class="expect-icon">${e.icon}</div><div class="expect-text"><strong>${e.label}</strong><span>${e.text}</span></div></div>`
+  ).join('');
+  // Upcoming
+  document.getElementById('upcoming-container').innerHTML=getUpcoming(cycleDay,length,mEnd,ovS).map(u=>
+    `<div class="upcoming-item"><div class="upcoming-dot" style="background:${u.dot}"></div><div class="upcoming-info"><strong>${u.name}</strong><span>${u.summary.replace('X',u.daysUntil)}</span></div></div>`
+  ).join('');
+  if(!window.matchMedia('(display-mode: standalone)').matches)document.getElementById('add-to-home-btn').style.display='flex';
+}
+
+// SETTINGS
+function openSettings(){
+  document.getElementById('settings-name').value=localStorage.getItem('cc_name')||'';
+  document.getElementById('settings-start').value=localStorage.getItem('cc_start')||'';
+  document.getElementById('settings-end').value=localStorage.getItem('cc_mens_end')||'';
+  document.getElementById('settings-ovulation').value=localStorage.getItem('cc_ovulation')||'';
+  document.getElementById('settings-length').value=localStorage.getItem('cc_length')||28;
+  document.getElementById('settings-panel').classList.add('open');
+}
+function closeSettings(){document.getElementById('settings-panel').classList.remove('open');}
+function saveSettings(){
+  const name=document.getElementById('settings-name').value.trim()||'henne';
+  const start=document.getElementById('settings-start').value;
+  const length=parseInt(document.getElementById('settings-length').value)||28;
+  if(!start){alert('Fyll i startdatum.');return;}
+  localStorage.setItem('cc_name',name);localStorage.setItem('cc_start',start);localStorage.setItem('cc_length',length);
+  const end=document.getElementById('settings-end').value,ov=document.getElementById('settings-ovulation').value;
+  if(end)localStorage.setItem('cc_mens_end',end);else localStorage.removeItem('cc_mens_end');
+  if(ov)localStorage.setItem('cc_ovulation',ov);else localStorage.removeItem('cc_ovulation');
+  closeSettings();loadApp();
+}
+
+// PWA
+let deferredPrompt=null;
+const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+const isStandalone=window.matchMedia('(display-mode: standalone)').matches;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;if(!isStandalone)document.getElementById('install-banner').classList.add('show');});
+function installPWA(){if(!deferredPrompt)return;deferredPrompt.prompt();deferredPrompt.userChoice.then(()=>{deferredPrompt=null;document.getElementById('install-banner').classList.remove('show');});}
+function showInstallPrompt(){if(isIOS)document.getElementById('ios-prompt').classList.add('show');else if(deferredPrompt)installPWA();}
+function dismissIOSPrompt(){document.getElementById('ios-prompt').classList.remove('show');}
+if(isIOS&&!isStandalone){setTimeout(()=>{if(localStorage.getItem('cc_start'))document.getElementById('ios-prompt').classList.add('show');},4000);}
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}
+window.addEventListener('load',()=>{
+  if(localStorage.getItem('cc_start')){loadApp();}
+  else{const t=new Date(),pad=n=>String(n).padStart(2,'0');document.getElementById('input-start').value=`${t.getFullYear()}-${pad(t.getMonth()+1)}-${pad(t.getDate())}`;}
+});
+</script>
+</body>
+</html>
