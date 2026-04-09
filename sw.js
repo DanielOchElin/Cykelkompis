@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cykelkompis-v1';
+const CACHE_NAME = 'cykelkompis-v5';
 const ASSETS = [
   './',
   './index.html',
@@ -22,7 +22,14 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
+  // Network first — always try to get fresh version, fall back to cache
   e.respondWith(
-    caches.match(e.request).then(cached => cached || fetch(e.request))
+    fetch(e.request)
+      .then(response => {
+        const clone = response.clone();
+        caches.open(CACHE_NAME).then(cache => cache.put(e.request, clone));
+        return response;
+      })
+      .catch(() => caches.match(e.request))
   );
 });
