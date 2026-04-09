@@ -240,7 +240,7 @@ canvas#moodChart { width: 100% !important; border-radius: 12px; }
 <!-- MAIN APP -->
 <div id="app-screen">
   <div class="top-bar">
-    <span class="app-name">Cykelkompis <span style="font-size:0.65rem;font-family:'Jost',sans-serif;font-weight:400;color:var(--muted);letter-spacing:0.08em;vertical-align:middle;">v0.51</span></span>
+    <span class="app-name">Cykelkompis <span style="font-size:0.65rem;font-family:'Jost',sans-serif;font-weight:400;color:var(--muted);letter-spacing:0.08em;vertical-align:middle;">v0.52</span></span>
     <div style="display:flex;gap:0.5rem;align-items:center">
       <div class="settings-btn" id="add-to-home-btn" onclick="showInstallPrompt()" style="display:none">📲</div>
       <div class="settings-btn" onclick="openSettings()">⚙️</div>
@@ -846,16 +846,19 @@ function toggleTag(el) {
 }
 function saveMood() {
   if(!selectedMood){alert('Välj ett humör först.');return;}
+  try {
   const note=document.getElementById('mood-note').value.trim();
   const time=document.getElementById('mood-time').value||nowTime();
-  const log=getMoodLog();
+  let log=getMoodLog();
   const key=todayKey();
-  if(!log[key])log[key]=[];
-  if(!Array.isArray(log[key]))log[key]=[log[key]]; // migrate old format
+  // Migrate old format safely
+  if(!log[key]) log[key]=[];
+  else if(!Array.isArray(log[key])) log[key]=[log[key]];
   const ts=`${key}T${time}`;
-  log[key].push({mood:selectedMood,note,time,ts,tags:selectedTags,phase:getCurrentPhaseName()});
-  log[key].sort((a,b)=>a.time.localeCompare(b.time));
+  log[key].push({mood:selectedMood,note,time,ts,tags:[...selectedTags],phase:getCurrentPhaseName()});
+  log[key].sort((a,b)=>(a.time||'').localeCompare(b.time||''));
   localStorage.setItem('cc_mood_log',JSON.stringify(log));
+  } catch(err) { alert('Kunde inte spara. Försök igen.'); return; }
   // Reset
   selectedMood=null;
   document.querySelectorAll('.mood-emoji-btn').forEach(b=>b.classList.remove('selected'));
