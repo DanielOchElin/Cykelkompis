@@ -24,17 +24,29 @@
   --shadow: 0 2px 20px rgba(0,0,0,0.06);
   --phase-color: #6B5B8A; --phase-light: #EEE9F8;
   --accent: #1C1814;
+  --role-accent: #1C1814;
 }
-/* HER mode shifts accent to rose */
-body.her-mode { --accent: #A63D2F; }
+/* Role-based accent colors */
+body.partner-mode { --role-accent: #3D6B8A; --accent: #3D6B8A; }
+body.her-mode { --role-accent: #A06070; --accent: #A06070; }
 
 html, body { height: 100%; overflow-x: hidden; }
 body { font-family: 'Jost', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-weight: 300; -webkit-font-smoothing: antialiased; padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); }
 h1, h2, h3, .serif { font-family: 'Cormorant Garamond', serif; }
 
+/* ── ROLE WATERMARK ── */
+body::before {
+  content: attr(data-role-symbol);
+  position: fixed; top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  font-size: 28vw; opacity: 0.025; pointer-events: none;
+  z-index: 0; font-family: 'Jost', sans-serif; font-weight: 300;
+  color: var(--role-accent);
+}
+
 /* ── ROLE SELECT ── */
 #role-screen { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem 1.5rem; background: linear-gradient(160deg, #F9F6F2 0%, #EEE9E2 100%); }
-.role-card { background: var(--surface); border-radius: 24px; padding: 2.5rem 2rem; width: 100%; max-width: 420px; box-shadow: 0 8px 40px rgba(0,0,0,0.10); text-align: center; }
+.role-card { background: var(--surface); border-radius: 24px; padding: 2.5rem 2rem; width: 100%; max-width: 420px; box-shadow: 0 8px 40px rgba(0,0,0,0.10); text-align: center; position: relative; z-index: 1; }
 .role-logo { margin-bottom: 2rem; }
 .role-logo h1 { font-size: 2.4rem; font-weight: 300; letter-spacing: 0.02em; line-height: 1.1; }
 .role-logo p { color: var(--muted); font-size: 0.85rem; margin-top: 0.4rem; letter-spacing: 0.08em; text-transform: uppercase; }
@@ -45,77 +57,99 @@ h1, h2, h3, .serif { font-family: 'Cormorant Garamond', serif; }
 .role-btn .role-emoji { font-size: 1.6rem; margin-bottom: 0.4rem; display: block; }
 .role-btn .role-title { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 400; display: block; margin-bottom: 0.2rem; }
 .role-btn .role-sub { font-size: 0.78rem; color: var(--muted); display: block; }
-.role-btn.partner { border-color: #1C1814; }
-.role-btn.her { border-color: #A63D2F; }
+.role-btn.partner { border-color: #3D6B8A; }
+.role-btn.her { border-color: #A06070; }
 
 /* ── SETUP ── */
-#setup-screen { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem 1.5rem; background: linear-gradient(160deg, #F9F6F2 0%, #EEE9E2 100%); display: none; }
-.setup-card { background: var(--surface); border-radius: 24px; padding: 2.5rem 2rem; width: 100%; max-width: 420px; box-shadow: 0 8px 40px rgba(0,0,0,0.10); }
+#setup-screen { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem 1.5rem; background: linear-gradient(160deg, #F9F6F2 0%, #EEE9E2 100%); display: none; position: relative; z-index: 1; }
+.setup-card { background: var(--surface); border-radius: 24px; padding: 2.5rem 2rem; width: 100%; max-width: 420px; box-shadow: 0 8px 40px rgba(0,0,0,0.10); position: relative; z-index: 1; }
 .setup-logo { text-align: center; margin-bottom: 2rem; }
 .setup-logo h1 { font-size: 2.4rem; font-weight: 300; letter-spacing: 0.02em; line-height: 1.1; }
 .setup-logo p { color: var(--muted); font-size: 0.85rem; margin-top: 0.4rem; letter-spacing: 0.08em; text-transform: uppercase; }
 .form-group { margin-bottom: 1.5rem; }
 .form-group label { display: block; font-size: 0.78rem; letter-spacing: 0.10em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.6rem; }
 .form-group input { width: 100%; padding: 0.85rem 1rem; border: 1.5px solid var(--border); border-radius: 12px; font-family: 'Jost', sans-serif; font-size: 1rem; font-weight: 400; color: var(--text); background: var(--bg); outline: none; transition: border-color 0.2s; }
-.form-group input:focus { border-color: var(--accent); }
+.form-group input:focus { border-color: var(--role-accent); }
 .form-hint { font-size: 0.78rem; color: var(--muted); margin-top: 0.4rem; }
-.btn-primary { width: 100%; padding: 1rem; background: var(--accent); color: #fff; border: none; border-radius: 12px; font-family: 'Jost', sans-serif; font-size: 0.9rem; font-weight: 500; letter-spacing: 0.06em; cursor: pointer; transition: opacity 0.2s, transform 0.1s; margin-top: 0.5rem; }
+.btn-primary { width: 100%; padding: 1rem; background: var(--role-accent); color: #fff; border: none; border-radius: 12px; font-family: 'Jost', sans-serif; font-size: 0.9rem; font-weight: 500; letter-spacing: 0.06em; cursor: pointer; transition: opacity 0.2s, transform 0.1s; margin-top: 0.5rem; }
 .btn-primary:active { transform: scale(0.98); opacity: 0.85; }
 
 /* ── MAIN APP ── */
-#app-screen { display: none; }
+#app-screen { display: none; position: relative; z-index: 1; }
 .top-bar { padding: 1rem 1.2rem 0.5rem; display: flex; align-items: center; justify-content: space-between; }
 .top-bar .app-name { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 300; letter-spacing: 0.02em; }
+.version-tag { font-size: 0.65rem; font-family: 'Jost', sans-serif; font-weight: 400; color: var(--muted); letter-spacing: 0.08em; vertical-align: middle; }
 .top-bar .settings-btn { width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid var(--border); background: var(--surface); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1rem; }
 .date-display { font-size: 0.78rem; color: var(--muted); text-align: right; margin: 0 1.2rem 0.2rem; letter-spacing: 0.04em; }
-.phase-hero { margin: 0.8rem 1.2rem 1rem; border-radius: 20px; padding: 1.6rem; background: var(--phase-light); border: 1.5px solid var(--phase-color); position: relative; overflow: hidden; animation: fadeUp 0.5s ease both; }
+
+/* Phase hero */
+.phase-hero { margin: 0.8rem 1.2rem 1rem; border-radius: 20px; padding: 1.6rem; background: var(--phase-light); border: 1.5px solid var(--phase-color); position: relative; overflow: hidden; animation: fadeUp 0.5s ease both; cursor: default; }
 .phase-hero::before { content: ''; position: absolute; top: -40px; right: -40px; width: 140px; height: 140px; border-radius: 50%; background: var(--phase-color); opacity: 0.06; }
 .phase-label { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--phase-color); font-weight: 500; margin-bottom: 0.3rem; }
 .phase-name { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 400; color: var(--text); line-height: 1.1; margin-bottom: 0.5rem; }
 .phase-days { font-size: 0.83rem; color: var(--muted); }
 .phase-days strong { color: var(--phase-color); font-weight: 500; }
+
+/* Cycle bar */
 .cycle-bar-wrap { margin: 0 1.2rem 1.2rem; animation: fadeUp 0.5s 0.1s ease both; }
 .cycle-bar-label { font-size: 0.72rem; letter-spacing: 0.10em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
-.cycle-bar { height: 8px; border-radius: 10px; background: var(--border); overflow: hidden; }
+.cycle-bar { height: 8px; border-radius: 10px; background: var(--border); overflow: visible; position: relative; }
+.cycle-bar-track { height: 100%; border-radius: 10px; background: var(--border); position: relative; overflow: hidden; }
 .cycle-bar-fill { height: 100%; border-radius: 10px; background: var(--phase-color); transition: width 0.8s cubic-bezier(0.4,0,0.2,1); }
-.cycle-bar-phases { display: flex; justify-content: space-between; margin-top: 0.4rem; }
-.cycle-bar-phases span { font-size: 0.68rem; color: var(--muted); }
+.cycle-bar-phases { display: flex; margin-top: 0.4rem; }
+.cycle-bar-phase-label { font-size: 0.68rem; color: var(--muted); cursor: pointer; transition: color 0.15s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cycle-bar-phase-label:hover { color: var(--text); }
+
+/* Sections */
 .section { margin: 0 1.2rem 1.2rem; animation: fadeUp 0.5s 0.2s ease both; }
 .section-title { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.8rem; font-weight: 500; }
-.tips-scroll { display: flex; gap: 0.8rem; overflow-x: auto; padding-bottom: 0.4rem; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
-.tips-scroll::-webkit-scrollbar { display: none; }
-.tip-card { flex: 0 0 76vw; max-width: 300px; background: var(--surface); border-radius: 16px; padding: 1.2rem; box-shadow: var(--shadow); scroll-snap-align: start; border-top: 3px solid var(--phase-color); }
+
+/* Tips */
+.tips-nav { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.6rem; }
+.tips-nav .section-title { margin-bottom: 0; flex: 1; }
+.tip-arrow { background: var(--surface); border: 1.5px solid var(--border); border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.85rem; flex-shrink: 0; -webkit-tap-highlight-color: transparent; transition: background 0.15s; }
+.tip-arrow:active { background: var(--bg); }
+.tip-counter { font-size: 0.72rem; color: var(--muted); white-space: nowrap; }
+.tip-card { background: var(--surface); border-radius: 16px; padding: 1.4rem; box-shadow: var(--shadow); border-top: 3px solid var(--phase-color); animation: fadeUp 0.25s ease both; }
 .tip-card .tip-icon { font-size: 1.4rem; margin-bottom: 0.6rem; }
-.tip-card .tip-title { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-weight: 500; margin-bottom: 0.4rem; }
+.tip-card .tip-title { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 500; margin-bottom: 0.4rem; }
 .tip-card .tip-body { font-size: 0.83rem; color: var(--muted); line-height: 1.6; }
+
+/* Expect */
 .expect-card { background: var(--surface); border-radius: 16px; padding: 1.2rem; box-shadow: var(--shadow); }
 .expect-row { display: flex; gap: 0.8rem; padding: 0.7rem 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
 .expect-row:last-child { border-bottom: none; padding-bottom: 0; }
 .expect-icon { font-size: 1.1rem; flex-shrink: 0; width: 28px; text-align: center; margin-top: 1px; }
 .expect-text strong { display: block; font-size: 0.82rem; font-weight: 500; margin-bottom: 0.15rem; }
 .expect-text span { font-size: 0.80rem; color: var(--muted); line-height: 1.5; }
+
+/* Upcoming — now clickable */
 .upcoming-list { display: flex; flex-direction: column; gap: 0.6rem; }
-.upcoming-item { background: var(--surface); border-radius: 12px; padding: 0.9rem 1rem; display: flex; align-items: center; gap: 0.9rem; box-shadow: var(--shadow); }
+.upcoming-item { background: var(--surface); border-radius: 12px; padding: 0.9rem 1rem; display: flex; align-items: center; gap: 0.9rem; box-shadow: var(--shadow); cursor: pointer; transition: background 0.15s; -webkit-tap-highlight-color: transparent; }
+.upcoming-item:active { background: var(--bg); }
 .upcoming-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 .upcoming-info { flex: 1; }
 .upcoming-info strong { font-size: 0.85rem; font-weight: 500; display: block; }
 .upcoming-info span { font-size: 0.78rem; color: var(--muted); }
+.upcoming-chevron { color: var(--muted); font-size: 0.8rem; }
 
-/* MOOD */
+/* Day separator in main log */
+.day-separator { font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); border-top: 1px solid var(--border); padding-top: 0.6rem; margin-top: 0.8rem; margin-bottom: 0.3rem; }
+
+/* Mood */
 .mood-card { background: var(--surface); border-radius: 16px; padding: 1.3rem; box-shadow: var(--shadow); }
 .mood-emojis { display: flex; justify-content: space-between; margin-bottom: 0.8rem; }
-.mood-emoji-btn { font-size: 1.8rem; background: none; border: none; cursor: pointer; padding: 0.3rem; border-radius: 50%; transition: transform 0.15s; opacity: 0.45; }
+.mood-emoji-btn { font-size: 1.8rem; background: none; border: none; cursor: pointer; padding: 0.3rem; border-radius: 50%; transition: transform 0.15s; opacity: 0.45; -webkit-tap-highlight-color: transparent; }
 .mood-emoji-btn.selected { opacity: 1; transform: scale(1.25); }
-/* Feeling tags (her mode) */
 .mood-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.8rem; }
-.mood-tag { padding: 0.3rem 0.7rem; border-radius: 20px; font-size: 0.75rem; border: 1.5px solid var(--border); background: var(--bg); cursor: pointer; color: var(--muted); transition: all 0.15s; }
+.mood-tag { padding: 0.3rem 0.7rem; border-radius: 20px; font-size: 0.75rem; border: 1.5px solid var(--border); background: var(--bg); cursor: pointer; color: var(--muted); transition: all 0.15s; -webkit-tap-highlight-color: transparent; }
 .mood-tag.selected { border-color: var(--phase-color); color: var(--phase-color); background: var(--phase-light); }
 .mood-time-row { display: flex; gap: 0.6rem; margin-bottom: 0.8rem; align-items: center; }
 .mood-time-row label { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
 .mood-time-input { flex: 1; border: 1.5px solid var(--border); border-radius: 10px; padding: 0.5rem 0.8rem; font-family: 'Jost', sans-serif; font-size: 0.85rem; color: var(--text); background: var(--bg); outline: none; }
 .mood-note { width: 100%; border: 1.5px solid var(--border); border-radius: 10px; padding: 0.7rem 0.9rem; font-family: 'Jost', sans-serif; font-size: 0.85rem; color: var(--text); background: var(--bg); outline: none; resize: none; min-height: 56px; transition: border-color 0.2s; }
 .mood-note:focus { border-color: var(--phase-color); }
-.mood-save { margin-top: 0.8rem; width: 100%; padding: 0.75rem; background: var(--phase-color); color: #fff; border: none; border-radius: 10px; font-family: 'Jost', sans-serif; font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: opacity 0.2s; }
+.mood-save { margin-top: 0.8rem; width: 100%; padding: 0.75rem; background: var(--phase-color); color: #fff; border: none; border-radius: 10px; font-family: 'Jost', sans-serif; font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: opacity 0.2s; -webkit-tap-highlight-color: transparent; }
 .mood-save:active { opacity: 0.8; }
 .mood-saved { text-align: center; font-size: 0.82rem; color: var(--muted); margin-top: 0.5rem; display: none; }
 .mood-today-log { margin-top: 0.8rem; display: flex; flex-direction: column; gap: 0.4rem; }
@@ -123,33 +157,37 @@ h1, h2, h3, .serif { font-family: 'Cormorant Garamond', serif; }
 .mood-today-time { font-weight: 500; color: var(--text); min-width: 42px; }
 .mood-today-emoji { font-size: 1rem; }
 
-/* ACTION BUTTONS */
-.action-btns { display: flex; gap: 0.8rem; margin: 0 1.2rem 1.2rem; }
-.action-btn { flex: 1; padding: 0.8rem; background: var(--surface); border: 1.5px solid var(--border); border-radius: 12px; font-family: 'Jost', sans-serif; font-size: 0.82rem; font-weight: 400; color: var(--text); cursor: pointer; text-align: center; box-shadow: var(--shadow); transition: background 0.15s; }
+/* Action buttons */
+.action-btns { display: flex; gap: 0.6rem; margin: 0 1.2rem 1.2rem; flex-wrap: wrap; }
+.action-btn { flex: 1; min-width: calc(50% - 0.3rem); padding: 0.8rem 0.5rem; background: var(--surface); border: 1.5px solid var(--border); border-radius: 12px; font-family: 'Jost', sans-serif; font-size: 0.80rem; font-weight: 400; color: var(--text); cursor: pointer; text-align: center; box-shadow: var(--shadow); transition: background 0.15s; -webkit-tap-highlight-color: transparent; }
 .action-btn:active { background: var(--bg); }
 
-/* PANELS */
+/* ── PANELS ── */
 .panel-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 100; align-items: flex-end; }
 .panel-overlay.open { display: flex; }
 .panel-sheet { background: var(--surface); border-radius: 24px 24px 0 0; padding: 1.5rem 1.5rem calc(2rem + env(safe-area-inset-bottom)); width: 100%; max-width: 500px; margin: 0 auto; max-height: 88vh; overflow-y: auto; }
 .panel-sheet h2 { font-size: 1.4rem; font-weight: 300; margin-bottom: 1.2rem; }
-.panel-close { float: right; background: var(--border); border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; }
+.panel-close { float: right; background: var(--border); border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; color: var(--text); }
 
-/* DIARY */
-.diary-week { margin-bottom: 1.2rem; }
+/* Diary */
+.diary-week { margin-bottom: 1.4rem; }
 .diary-week-label { font-size: 0.72rem; letter-spacing: 0.10em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.6rem; font-weight: 500; }
-.diary-entry { display: flex; gap: 0.8rem; padding: 0.7rem 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+.diary-entry { display: flex; gap: 0.8rem; padding: 0.9rem 0; border-bottom: 2px solid var(--border); align-items: flex-start; }
 .diary-entry:last-child { border-bottom: none; }
 .diary-meta { min-width: 80px; }
 .diary-date { font-size: 0.72rem; color: var(--muted); display: block; }
 .diary-time { font-size: 0.72rem; font-weight: 500; color: var(--text); display: block; }
-.diary-emoji { font-size: 1.1rem; flex-shrink: 0; }
+.diary-emoji { font-size: 1.1rem; flex-shrink: 0; padding-top: 2px; }
 .diary-right { flex: 1; }
 .diary-tags-line { font-size: 0.72rem; color: var(--phase-color); margin-bottom: 0.2rem; }
 .diary-note { font-size: 0.82rem; color: var(--text); line-height: 1.5; }
+.diary-actions { display: flex; gap: 0.5rem; margin-top: 0.4rem; }
+.diary-action-btn { font-size: 0.72rem; color: var(--muted); background: none; border: none; cursor: pointer; padding: 0; font-family: 'Jost', sans-serif; -webkit-tap-highlight-color: transparent; }
+.diary-edit-area { width: 100%; border: 1.5px solid var(--phase-color); border-radius: 8px; padding: 0.5rem 0.7rem; font-family: 'Jost', sans-serif; font-size: 0.82rem; color: var(--text); background: rgba(255,255,255,0.5); outline: none; resize: none; margin-top: 0.3rem; }
+.diary-save-edit { font-size: 0.72rem; color: var(--role-accent); background: none; border: none; cursor: pointer; margin-top: 0.3rem; font-family: 'Jost', sans-serif; font-weight: 500; }
 .diary-empty { font-size: 0.85rem; color: var(--muted); text-align: center; padding: 2rem 0; }
 
-/* INSIGHTS */
+/* Insights */
 .insight-block { background: var(--surface); border-radius: 16px; padding: 1.2rem; box-shadow: var(--shadow); margin-bottom: 0.8rem; }
 .insight-block h3 { font-size: 1rem; font-weight: 400; margin-bottom: 0.8rem; color: var(--text); }
 .insight-row { display: flex; gap: 0.8rem; padding: 0.5rem 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
@@ -159,19 +197,43 @@ h1, h2, h3, .serif { font-family: 'Cormorant Garamond', serif; }
 .insight-text strong { display: block; font-size: 0.80rem; font-weight: 500; color: var(--text); margin-bottom: 0.1rem; }
 .insight-empty { font-size: 0.82rem; color: var(--muted); text-align: center; padding: 1.5rem 0; }
 
-/* CHART */
-.chart-wrap { margin-top: 0.5rem; }
-canvas#moodChart { width: 100% !important; border-radius: 12px; }
+/* Chart */
+.chart-wrap { position: relative; margin-top: 0.5rem; }
+canvas#moodChart { width: 100% !important; border-radius: 12px; cursor: pointer; }
+.chart-tooltip { position: absolute; background: var(--text); color: #fff; border-radius: 10px; padding: 0.6rem 0.9rem; font-size: 0.78rem; font-family: 'Jost', sans-serif; pointer-events: none; display: none; z-index: 10; max-width: 200px; line-height: 1.5; }
 .chart-legend { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.8rem; }
 .chart-legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; color: var(--muted); }
 .chart-legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 
-/* EXPORT/IMPORT */
+/* Phase info panel */
+.phase-info-header { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1.2rem; }
+.phase-info-dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
+.phase-info-subtitle { font-size: 0.78rem; color: var(--muted); margin-top: 0.2rem; }
+.phase-info-section { margin-bottom: 1.2rem; }
+.phase-info-section h3 { font-size: 0.72rem; letter-spacing: 0.10em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.7rem; font-weight: 500; }
+.phase-info-row { display: flex; gap: 0.7rem; padding: 0.5rem 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+.phase-info-row:last-child { border-bottom: none; }
+.phase-info-icon { font-size: 1rem; flex-shrink: 0; width: 22px; text-align: center; }
+.phase-info-text { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+.phase-info-text strong { display: block; font-size: 0.82rem; font-weight: 500; color: var(--text); margin-bottom: 0.1rem; }
+
+/* Story panel */
+.story-period-row { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+.story-toggle { flex: 1; min-width: 0; padding: 0.55rem 0.3rem; border: 1.5px solid var(--border); border-radius: 10px; background: var(--bg); font-family: 'Jost', sans-serif; font-size: 0.78rem; color: var(--text); cursor: pointer; text-align: center; transition: all 0.15s; white-space: nowrap; }
+.story-toggle.active { background: var(--role-accent); color: #fff; border-color: var(--role-accent); }
+.story-custom-row { display: flex; gap: 0.5rem; align-items: center; margin-bottom: 1rem; display: none; }
+.story-date-input { flex: 1; border: 1.5px solid var(--border); border-radius: 10px; padding: 0.5rem 0.7rem; font-family: 'Jost', sans-serif; font-size: 0.82rem; color: var(--text); background: var(--bg); outline: none; }
+.story-sep { font-size: 0.78rem; color: var(--muted); }
+.story-generate-btn { width: 100%; padding: 0.9rem; background: var(--role-accent); color: #fff; border: none; border-radius: 12px; font-family: 'Jost', sans-serif; font-size: 0.88rem; font-weight: 500; cursor: pointer; letter-spacing: 0.04em; -webkit-tap-highlight-color: transparent; }
+.story-generate-btn:active { opacity: 0.8; }
+.story-output { margin-top: 1.2rem; padding: 1.2rem; background: var(--bg); border-radius: 14px; font-size: 0.88rem; line-height: 1.85; color: var(--text); font-family: 'Cormorant Garamond', serif; font-weight: 300; border: 1px solid var(--border); }
+
+/* Settings */
 .data-btns { display: flex; flex-direction: column; gap: 0.8rem; margin-top: 1rem; }
-.data-btn { padding: 0.9rem 1rem; border: 1.5px solid var(--border); border-radius: 12px; background: var(--bg); font-family: 'Jost', sans-serif; font-size: 0.85rem; cursor: pointer; color: var(--text); text-align: left; }
+.data-btn { padding: 0.9rem 1rem; border: 1.5px solid var(--border); border-radius: 12px; background: var(--bg); font-family: 'Jost', sans-serif; font-size: 0.85rem; cursor: pointer; color: var(--text); text-align: left; -webkit-tap-highlight-color: transparent; }
 .data-btn:active { background: var(--border); }
 
-/* IOS */
+/* iOS */
 #ios-prompt { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-radius: 20px 20px 0 0; padding: 1.5rem 1.5rem calc(1.5rem + env(safe-area-inset-bottom)); box-shadow: 0 -4px 30px rgba(0,0,0,0.12); z-index: 200; text-align: center; }
 #ios-prompt.show { display: block; }
 #ios-prompt h3 { font-size: 1.2rem; font-weight: 400; margin-bottom: 0.5rem; }
@@ -195,6 +257,7 @@ canvas#moodChart { width: 100% !important; border-radius: 12px; }
   <div class="ios-steps">1. Tryck på <strong>dela-ikonen</strong> (□↑) i Safari<br>2. Välj <strong>"Lägg till på hemskärmen"</strong><br>3. Tryck <strong>"Lägg till"</strong></div>
   <button class="close-prompt" onclick="dismissIOSPrompt()">Stäng</button>
 </div>
+
 <div id="install-banner">
   <span>📲 Installera som app</span>
   <div style="display:flex;gap:0.5rem">
@@ -206,16 +269,16 @@ canvas#moodChart { width: 100% !important; border-radius: 12px; }
 <!-- ROLE SELECT -->
 <div id="role-screen">
   <div class="role-card">
-    <div class="role-logo"><h1>Cykelkompis</h1><p>För dig som bryr dig</p></div>
+    <div class="role-logo"><h1 class="serif">Cykelkompis</h1><p>För dig som bryr dig</p></div>
     <div class="role-question">Jag vill…</div>
     <div class="role-buttons">
       <button class="role-btn partner" onclick="selectRole('partner')">
-        <span class="role-emoji">🤝</span>
+        <span class="role-emoji">♂</span>
         <span class="role-title">Stötta min partner</span>
         <span class="role-sub">Förstå hennes cykel och bli en bättre partner</span>
       </button>
       <button class="role-btn her" onclick="selectRole('her')">
-        <span class="role-emoji">🌸</span>
+        <span class="role-emoji">♀</span>
         <span class="role-title">Förstå min egen cykel</span>
         <span class="role-sub">Följ din cykel och kommunicera bättre</span>
       </button>
@@ -227,7 +290,7 @@ canvas#moodChart { width: 100% !important; border-radius: 12px; }
 <div id="setup-screen">
   <div class="setup-card">
     <div class="setup-logo">
-      <h1>Cykelkompis</h1>
+      <h1 class="serif">Cykelkompis</h1>
       <p id="setup-subtitle">För dig som bryr dig</p>
     </div>
     <div class="form-group"><label id="name-label">Hennes namn</label><input type="text" id="input-name" placeholder="t.ex. Elin" /></div>
@@ -240,7 +303,7 @@ canvas#moodChart { width: 100% !important; border-radius: 12px; }
 <!-- MAIN APP -->
 <div id="app-screen">
   <div class="top-bar">
-    <span class="app-name">Cykelkompis <span style="font-size:0.65rem;font-family:'Jost',sans-serif;font-weight:400;color:var(--muted);letter-spacing:0.08em;vertical-align:middle;">v0.52</span></span>
+    <span class="app-name serif">Cykelkompis <span class="version-tag">v0.6</span></span>
     <div style="display:flex;gap:0.5rem;align-items:center">
       <div class="settings-btn" id="add-to-home-btn" onclick="showInstallPrompt()" style="display:none">📲</div>
       <div class="settings-btn" onclick="openSettings()">⚙️</div>
@@ -248,23 +311,22 @@ canvas#moodChart { width: 100% !important; border-radius: 12px; }
   </div>
   <div class="date-display" id="date-display"></div>
 
-  <div class="phase-hero">
+  <div class="phase-hero" id="phase-hero">
     <div class="phase-label" id="phase-label"></div>
-    <div class="phase-name" id="phase-name"></div>
+    <div class="phase-name serif" id="phase-name"></div>
     <div class="phase-days" id="phase-days"></div>
   </div>
 
   <div class="cycle-bar-wrap">
     <div class="cycle-bar-label">Dag <span id="cycle-day-num">1</span> av <span id="cycle-total">28</span></div>
-    <div class="cycle-bar"><div class="cycle-bar-fill" id="cycle-fill"></div></div>
-    <div class="cycle-bar-phases"><span>Mens</span><span>Follikulär</span><span>Ägglossning</span><span>Luteal</span></div>
+    <div class="cycle-bar"><div class="cycle-bar-track"><div class="cycle-bar-fill" id="cycle-fill"></div></div></div>
+    <div class="cycle-bar-phases" id="cycle-bar-phases"></div>
   </div>
 
   <!-- MOOD LOG -->
   <div class="section">
     <div class="section-title" id="mood-section-title">Hur verkar hon må idag?</div>
     <div class="mood-card">
-      <!-- Feeling tags — only shown in her mode -->
       <div class="mood-tags" id="mood-tags" style="display:none">
         <div class="mood-tag" onclick="toggleTag(this)">😤 Irriterad</div>
         <div class="mood-tag" onclick="toggleTag(this)">😴 Trött</div>
@@ -274,6 +336,7 @@ canvas#moodChart { width: 100% !important; border-radius: 12px; }
         <div class="mood-tag" onclick="toggleTag(this)">⚡ Energisk</div>
         <div class="mood-tag" onclick="toggleTag(this)">😊 Glad</div>
         <div class="mood-tag" onclick="toggleTag(this)">🤢 Illamående</div>
+        <div class="mood-tag" onclick="toggleTag(this)">😤 Arg</div>
       </div>
       <div class="mood-emojis">
         <button class="mood-emoji-btn" data-val="1" onclick="selectMood(1)">😞</button>
@@ -297,11 +360,17 @@ canvas#moodChart { width: 100% !important; border-radius: 12px; }
     <button class="action-btn" onclick="openDiary()">📓 Dagbok</button>
     <button class="action-btn" onclick="openChart()">📈 Graf</button>
     <button class="action-btn" onclick="openInsights()">🔍 Insikter</button>
+    <button class="action-btn" onclick="openStory()">✨ Berättelse</button>
   </div>
 
   <div class="section">
-    <div class="section-title" id="tips-title">Tips för dig idag</div>
-    <div class="tips-scroll" id="tips-container"></div>
+    <div class="tips-nav">
+      <div class="section-title" id="tips-title">Tips för dig idag</div>
+      <button class="tip-arrow" onclick="prevTip()">←</button>
+      <span class="tip-counter" id="tip-counter">1 / 50</span>
+      <button class="tip-arrow" onclick="nextTip()">→</button>
+    </div>
+    <div id="tips-container"></div>
   </div>
 
   <div class="section">
@@ -319,7 +388,7 @@ canvas#moodChart { width: 100% !important; border-radius: 12px; }
 <!-- SETTINGS -->
 <div class="panel-overlay" id="settings-panel">
   <div class="panel-sheet">
-    <button class="panel-close" onclick="closeSettings()">✕</button>
+    <button class="panel-close" onclick="closePanel('settings-panel')">✕</button>
     <h2 class="serif">Inställningar</h2>
     <div class="form-group"><label id="settings-name-label">Namn</label><input type="text" id="settings-name" /></div>
     <div class="form-group"><label>Senaste mens startade</label><input type="date" id="settings-start" /></div>
@@ -339,7 +408,7 @@ canvas#moodChart { width: 100% !important; border-radius: 12px; }
 <!-- DIARY -->
 <div class="panel-overlay" id="diary-panel">
   <div class="panel-sheet">
-    <button class="panel-close" onclick="closeDiary()">✕</button>
+    <button class="panel-close" onclick="closePanel('diary-panel')">✕</button>
     <h2 class="serif">Dagbok</h2>
     <div id="diary-content"></div>
   </div>
@@ -348,16 +417,17 @@ canvas#moodChart { width: 100% !important; border-radius: 12px; }
 <!-- CHART -->
 <div class="panel-overlay" id="chart-panel">
   <div class="panel-sheet">
-    <button class="panel-close" onclick="closeChart()">✕</button>
+    <button class="panel-close" onclick="closePanel('chart-panel')">✕</button>
     <h2 class="serif">Humörgraf</h2>
     <div class="chart-wrap">
-      <canvas id="moodChart" height="200"></canvas>
-      <div class="chart-legend">
-        <div class="chart-legend-item"><div class="chart-legend-dot" style="background:#A63D2F"></div>Mens</div>
-        <div class="chart-legend-item"><div class="chart-legend-dot" style="background:#3D7A5E"></div>Follikulär</div>
-        <div class="chart-legend-item"><div class="chart-legend-dot" style="background:#B8860B"></div>Ägglossning</div>
-        <div class="chart-legend-item"><div class="chart-legend-dot" style="background:#6B5B8A"></div>Luteal</div>
-      </div>
+      <canvas id="moodChart" height="220"></canvas>
+      <div class="chart-tooltip" id="chart-tooltip"></div>
+    </div>
+    <div class="chart-legend">
+      <div class="chart-legend-item"><div class="chart-legend-dot" style="background:#A63D2F"></div>Mens</div>
+      <div class="chart-legend-item"><div class="chart-legend-dot" style="background:#3D7A5E"></div>Follikulär</div>
+      <div class="chart-legend-item"><div class="chart-legend-dot" style="background:#B8860B"></div>Ägglossning</div>
+      <div class="chart-legend-item"><div class="chart-legend-dot" style="background:#6B5B8A"></div>Luteal</div>
     </div>
   </div>
 </div>
@@ -365,18 +435,51 @@ canvas#moodChart { width: 100% !important; border-radius: 12px; }
 <!-- INSIGHTS -->
 <div class="panel-overlay" id="insights-panel">
   <div class="panel-sheet">
-    <button class="panel-close" onclick="closeInsights()">✕</button>
+    <button class="panel-close" onclick="closePanel('insights-panel')">✕</button>
     <h2 class="serif">Insikter</h2>
     <div id="insights-content"></div>
   </div>
 </div>
 
+<!-- PHASE INFO -->
+<div class="panel-overlay" id="phase-panel">
+  <div class="panel-sheet">
+    <button class="panel-close" onclick="closePanel('phase-panel')">✕</button>
+    <div id="phase-info-content"></div>
+  </div>
+</div>
+
+<!-- STORY -->
+<div class="panel-overlay" id="story-panel">
+  <div class="panel-sheet">
+    <button class="panel-close" onclick="closePanel('story-panel')">✕</button>
+    <h2 class="serif">Berättelse</h2>
+    <div style="font-size:0.78rem;color:var(--muted);margin-bottom:1rem;letter-spacing:0.06em;text-transform:uppercase;">Period</div>
+    <div class="story-period-row">
+      <button class="story-toggle active" id="sp-week" onclick="setStoryPeriod('week')">Vecka</button>
+      <button class="story-toggle" id="sp-month" onclick="setStoryPeriod('month')">Månad</button>
+      <button class="story-toggle" id="sp-all" onclick="setStoryPeriod('all')">Allt</button>
+      <button class="story-toggle" id="sp-custom" onclick="setStoryPeriod('custom')">Eget</button>
+    </div>
+    <div class="story-custom-row" id="story-custom-row">
+      <input type="date" class="story-date-input" id="story-from" />
+      <span class="story-sep">–</span>
+      <input type="date" class="story-date-input" id="story-to" />
+    </div>
+    <button class="story-generate-btn" onclick="generateStory()">Generera</button>
+    <div id="story-output"></div>
+  </div>
+</div>
+
 <script>
-// ── PHASE DATA ──
+const VERSION = '0.6';
+
+// ── PHASE DATA (HIS) ──────────────────────────────────
 const HIS_PHASES = {
   menstrual: {
     name:'Mensfas', label:'Dag 1–5 · Mens', hex:'#A63D2F', hexLight:'#F7EDEB',
     summary:'Om X dagar. Lägre energi och kramper möjligt. Var extra omtänksam.',
+    description:'Livmodern kontraherar för att stöta ut slemhinnan. Det är verklig fysisk smärta — inte dramatik. Östrogen och progesteron är på sin lägsta nivå. Energin är låg, känslolivet mer känsligt.',
     tips:[
       {icon:'🛁',title:'Värme hjälper',body:'En värmekudde eller varm dusch kan lindra kramper. Fråga om hon vill ha en.'},
       {icon:'🍫',title:'Mörk choklad',body:'Magnesium i mörk choklad kan minska kramper. Köp lite utan att fråga.'},
@@ -408,6 +511,26 @@ const HIS_PHASES = {
       {icon:'💬',title:'Lyssna aktivt',body:'Om hon pratar — lyssna. Kom inte med lösningar om hon inte ber om dem.'},
       {icon:'🛁',title:'Ta ansvar hemma',body:'En sak du gör utan att bli tillfrågad är värd mer än tio du lovar.'},
       {icon:'❤️',title:'Du gör skillnad',body:'Att du ens tänker på det här gör dig till en bättre partner. Kom ihåg det.'},
+      {icon:'🌿',title:'Frisk luft försiktigt',body:'En kort promenad om hon orkar kan lyfta humöret. Föreslå varsamt.'},
+      {icon:'🍕',title:'Hennes favoritmat',body:'Beställ eller laga hennes favoritmat utan att hon behöver be om det.'},
+      {icon:'🕯️',title:'Skapa stämning',body:'Tänd ett ljus, sänk belysningen. En lugn atmosfär kostar ingenting.'},
+      {icon:'📞',title:'Kolla in under dagen',body:'Ett "Hur mår du?" mitt på dagen visar att du tänker på henne.'},
+      {icon:'🤗',title:'Krama länge',body:'En lång kram utan agenda frigör oxytocin. Det hjälper på riktigt.'},
+      {icon:'🧦',title:'Varma strumpor',body:'Värme i fötterna hjälper faktiskt mot kramper. Liten gest, stor effekt.'},
+      {icon:'📓',title:'Anteckna inför nästa gång',body:'Notera vad som fungerade. Du kan bli bättre för varje cykel.'},
+      {icon:'🌊',title:'Tillåt hennes känslor',body:'Om hon gråter utan tydlig anledning — krama. Fråga inte varför.'},
+      {icon:'🙏',title:'Tacka henne',body:'Säg att du uppskattar hur hon hanterar det här. Det är verkligen jobbigt.'},
+      {icon:'🔇',title:'Varsam röst',body:'Prata lite mjukare och lugnt nu. Tonen påverkar mer än orden.'},
+      {icon:'🍦',title:'Glass kanske?',body:'Om hon vill ha nåt sött — hämta det. Glassen väljer du inte.'},
+      {icon:'💡',title:'Förutse behoven',body:'Fråga inte hela tiden. Handla, laga, städa — utan att det ska bli en grej.'},
+      {icon:'🌺',title:'Berätta vad du ser',body:'Säg att du ser hur hon kämpar och att du respekterar det.'},
+      {icon:'🏠',title:'Tryggt hem',body:'Se till att hemmet känns lugnt och tryggt. Det är din viktigaste uppgift nu.'},
+      {icon:'⏰',title:'Ge tid',body:'Hon kan behöva lite längre tid än vanligt för allt just nu. Vänta tålmodigt.'},
+      {icon:'🎁',title:'Liten gåva',body:'Något litet och oväntat — choklad, blommor, ett bad — slår hårt nu.'},
+      {icon:'👁️',title:'Se bortom humöret',body:'Hon är mer än det humör hon visar nu. Kom ihåg personen bakom fasen.'},
+      {icon:'🌙',title:'Nattrutinen',body:'Se till att hon kan lägga sig tidigt om hon vill. Var inte ett hinder.'},
+      {icon:'💪',title:'Håll ut',body:'Det vänder om några dagar. Din tålamod just nu är en kärlekshandling.'},
+      {icon:'🧩',title:'Inga stora beslut',body:'Undvik att ta upp tunga ämnen eller fatta stora beslut nu. Det väntar.'},
     ],
     expect:[
       {icon:'😔',label:'Humör',text:'Kan vara mer känslosam, trött eller irriterad. Normalt — inte riktat mot dig.'},
@@ -419,6 +542,7 @@ const HIS_PHASES = {
   follicular: {
     name:'Follikulär fas', label:'Dag 6–13 · Uppbyggnad', hex:'#3D7A5E', hexLight:'#E8F3EE',
     summary:'Om X dagar. Stabilare humör och mer energi. Bra tid att planera.',
+    description:'Östrogenet stiger och kroppen återhämtar sig. Energi, kreativitet och humör förbättras markant. Hjärnan är mer kommunikativ och logisk. Det är ofta den lättaste perioden i cykeln.',
     tips:[
       {icon:'🚀',title:'Hon är på gång',body:'Energin stiger. Bra tillfälle att planera roliga saker tillsammans.'},
       {icon:'💬',title:'Öppen för samtal',body:'Hon är mer social och kommunikativ nu. Bra tid för viktiga snack.'},
@@ -450,6 +574,26 @@ const HIS_PHASES = {
       {icon:'🎁',title:'Överraska',body:'En liten överraskning landar extra bra när hon är i bra humör.'},
       {icon:'🔋',title:'Hennes batteri laddat',body:'Passa på att be om saker nu — hon har kapacitet att hjälpa.'},
       {icon:'❤️',title:'Investera i relationen',body:'Det här är en av de bästa faserna för att stärka er relation. Var närvarande.'},
+      {icon:'🌞',title:'Morgonrutinen',body:'Starta dagen ihop om möjligt. Energin är bra och stämningen lätt.'},
+      {icon:'🍳',title:'Laga mat ihop',body:'Bjud in henne i köket. Nu har hon energi och lust att delta.'},
+      {icon:'🎭',title:'Upplev något nytt',body:'Föreslå en aktivitet ni aldrig gjort — hon är mottaglig för nya intryck.'},
+      {icon:'🤝',title:'Var hennes partner på riktigt',body:'Nu är hon stark och i bra form. Möt henne där — som jämlike.'},
+      {icon:'🔑',title:'Ta upp svåra ämnen nu',body:'Om det är något ni behöver prata om — nu är rätt tid. Hon är mottaglig.'},
+      {icon:'🌸',title:'Bekräfta hennes insatser',body:'Säg högt vad hon gör bra. Hon tar emot det djupare nu.'},
+      {icon:'🏊',title:'Prova ny aktivitet',body:'Simning, klättring, yoga — föreslå något nytt att prova ihop.'},
+      {icon:'📖',title:'Diskutera något intressant',body:'En bok, en podcast, ett ämne — hjärnan vill tänka nu.'},
+      {icon:'🌄',title:'Resa eller utflykt',body:'Nu är ett bra läge att planera en resa eller dagstrip.'},
+      {icon:'💫',title:'Var hennes hejarklack',body:'Vad hon än arbetar mot just nu — visa att du tror på henne.'},
+      {icon:'🎠',title:'Spontana förslag',body:'Säg ja till spontana planer. Hon är öppen och nyfiken nu.'},
+      {icon:'🧁',title:'Fira litet',body:'Hitta något litet att fira ihop. Det behöver inte vara stort.'},
+      {icon:'🌻',title:'Positiv energi',body:'Din optimism smittar av sig nu. Kom med en positiv inställning.'},
+      {icon:'🦋',title:'Ny fas ny energi',body:'Påminn dig om att hon just kommit igenom mensfasen. Fira det med henne.'},
+      {icon:'🎤',title:'Låt henne prata',body:'Hon är verbal och kommunikativ nu. Ge henne utrymme att berätta.'},
+      {icon:'🏆',title:'Erkänn hennes styrka',body:'Säg högt att du ser hur stark hon är. Nu landar det djupt.'},
+      {icon:'🌈',title:'Hitta glädjen ihop',body:'Gör något roligt tillsammans utan agenda. Bara för sakens skull.'},
+      {icon:'💝',title:'Visa omtanke',body:'Omtanke utan anledning är det finaste du kan ge.'},
+      {icon:'🎯',title:'Gemensamma mål',body:'Sätt ett gemensamt mål ni kan sträva mot ihop. Nu är rätt tid.'},
+      {icon:'🌟',title:'Du är en bra partner',body:'Att du försöker förstå hennes cykel gör dig till en bättre partner. Det märks.'},
     ],
     expect:[
       {icon:'😊',label:'Humör',text:'Mer optimistisk, social och energisk. Östrogenet stiger.'},
@@ -461,6 +605,7 @@ const HIS_PHASES = {
   ovulation: {
     name:'Ägglossningsfas', label:'Dag 14–17 · Topp', hex:'#B8860B', hexLight:'#FBF5E0',
     summary:'Om X dagar. Hon är på topp — energisk, öppen och nära. Var närvarande.',
+    description:'LH-hormonet toppar och ett ägg frigörs. Östrogen och testosteron når sina högsta nivåer. Hon är som mest utåtriktad, kommunikativ, energisk och mottaglig för intimitet. Kroppens bästa dagar.',
     tips:[
       {icon:'✨',title:'Hon strålar',body:'Östrogen och testosteron är på topp. Mer utåtriktad och självsäker.'},
       {icon:'❤️',title:'Intim tid',body:'Libido är ofta som högst nu. Var uppmärksam och lyhörd.'},
@@ -492,6 +637,25 @@ const HIS_PHASES = {
       {icon:'🏃',title:'Tävla lite',body:'En liten utmaning kan vara extra kul nu — hon älskar att prestera.'},
       {icon:'💫',title:'Närvaro är allt',body:'Under ägglossning är hon som mest mottaglig för kärlek. Var där.'},
       {icon:'❤️',title:'Berätta hur du känner',body:'Säg det högt. Nu landar det extra djupt.'},
+      {icon:'🎈',title:'Gör något oväntat',body:'En liten överraskning — frukost på sängen, en spontan utflykt. Nu är det rätt.'},
+      {icon:'🌊',title:'Djupa samtal',body:'Hon är öppen för sårbarhet nu. Dela något äkta med henne.'},
+      {icon:'🤲',title:'Håll hennes hand',body:'Fysisk kontakt utan agenda. Det räcker långt.'},
+      {icon:'🧘',title:'Var i nuet',body:'Inga telefoner, ingen distorsion. Bara ni två en stund.'},
+      {icon:'🌿',title:'Naturupplevelse',body:'En promenad i naturen ihop nu är extra givande. Energin finns.'},
+      {icon:'🎁',title:'Ge utan anledning',body:'En gåva utan orsak slår alltid hårdast. Nu extra.'},
+      {icon:'🗺️',title:'Utforska ihop',body:'En ny del av stan, en ny led, ett nytt café. Nyfikenheten är hög nu.'},
+      {icon:'🏅',title:'Beröm henne inför andra',body:'Säg något fint om henne när ni är med andra. Det fastnar.'},
+      {icon:'🌻',title:'Var hennes fan',body:'Nu är hon på topp. Påminn henne om hur kapabel hon är.'},
+      {icon:'💡',title:'Kreativa projekt',body:'Starta något kreativt ihop. Nu är energin och lusten på plats.'},
+      {icon:'🔭',title:'Blicka framåt',body:'Prata om drömmar och planer. Hon är optimistisk och framtidsinriktad nu.'},
+      {icon:'🎶',title:'Sjung med',body:'Sätt på hennes favoritmusik och sjung med. Löjligt och härligt.'},
+      {icon:'🧡',title:'Mjuk styrka',body:'Var trygg och stark nu. Det är vad hon behöver bakom all energi.'},
+      {icon:'🌙',title:'Lägg undan skärmen',body:'En hel kväll utan skärm med varandra. Det är mer värt än du tror.'},
+      {icon:'🐾',title:'En ny upplevelse ihop',body:'Gör något ni aldrig gjort — hur litet som helst. Det skapar minnen.'},
+      {icon:'🎯',title:'Var direkt',body:'Säg vad du menar och menar vad du säger. Det uppskattas djupt nu.'},
+      {icon:'🌹',title:'Det lilla räknas',body:'En blomma, ett leende, en extra kram — det lilla är det stora.'},
+      {icon:'🤍',title:'Säg "jag älskar dig"',body:'Om du menar det — säg det. Nu landar det djupare än vanligt.'},
+      {icon:'🌟',title:'Hon är på topp',body:'Påminn henne om hur fin hon är. Inte för att du måste — för att det är sant.'},
     ],
     expect:[
       {icon:'🌟',label:'Humör',text:'Mer självsäker, glad och social. Hormonerna är på topp.'},
@@ -503,6 +667,7 @@ const HIS_PHASES = {
   luteal: {
     name:'Lutealfas', label:'Dag 18–28 · Nedgång', hex:'#6B5B8A', hexLight:'#EEE9F8',
     summary:'Om X dagar. Energin sjunker och PMS möjligt. Ha tålamod.',
+    description:'Progesteron dominerar och östrogen sjunker gradvis. Serotonin påverkas, vilket kan ge irritation, nedstämdhet och ökad känslighet. Kroppen förbereder sig antingen för graviditet eller för att starta en ny cykel. PMS är biologiskt — inte personlighet.',
     tips:[
       {icon:'🧘',title:'Sänk tempot',body:'Energin minskar mot slutet. Låt henne sätta tempot.'},
       {icon:'🍲',title:'Komfortmat',body:'Sug efter kolhydrater och sötsaker är hormonellt — inte svagheter. Döm inte.'},
@@ -534,6 +699,26 @@ const HIS_PHASES = {
       {icon:'🌱',title:'Det vänder snart',body:'Påminn dig om att mensfasen börjar om några dagar. Håll ut.'},
       {icon:'👁️',title:'Se henne',body:'Även när hon är på sitt sämsta — visa att du ser mer än humöret.'},
       {icon:'❤️',title:'Kärlek är ett val',body:'Att välja att vara omtänksam nu, när det är svårast — det är kärlek.'},
+      {icon:'🔇',title:'Sänk volymen',body:'Lägre volym på TV, musik och din röst gör faktiskt skillnad nu.'},
+      {icon:'🛁',title:'Bad',body:'Erbjud ett varmt bad. Ljus, musik, lugn — du kan ordna det.'},
+      {icon:'🍕',title:'Mat utan drama',body:'Laga det hon vill ha utan att göra en stor grej av det.'},
+      {icon:'🌸',title:'Säg det du menar',body:'En ärlig, varm mening räcker. Inga stora gester krävs.'},
+      {icon:'🧪',title:'Förstå kemin',body:'PMS är inte ett val — det är biokemi. Kom ihåg det när det är svårt.'},
+      {icon:'🎈',title:'Inga krav',body:'Inga krav på prestation, humör eller deltagande. Hon får vara precis som hon är.'},
+      {icon:'🕯️',title:'Lugn atmosfär',body:'Tänd ett ljus, dämpa belysningen. Liten gest, stor effekt på stämningen.'},
+      {icon:'🐾',title:'Var stabil',body:'Var din stabilaste version nu. Det är vad hon behöver mest.'},
+      {icon:'🌙',title:'Natt-rutinen',body:'Se till att hon kan lägga sig bekvämt. Störande ljud eller ljus är extra jobbigt nu.'},
+      {icon:'💪',title:'Du klarar det',body:'En tålmodig partner under lutealfasen är en stor kärlekshandling. Du klarar det.'},
+      {icon:'🔮',title:'Det är tillfälligt',body:'Påminn dig: detta är biologiskt och det går över. Håll det perspektivet.'},
+      {icon:'🌻',title:'Tacka henne',body:'Tacka henne för att hon delar sin cykel med dig. Det är inte självklart.'},
+      {icon:'🤲',title:'Var bara där',body:'Ibland räcker det med att finnas. Ingen lösning, inga råd — bara du.'},
+      {icon:'📓',title:'Skriv ned det',body:'Anteckna vad som funkade. Du kan bli bättre på detta varje cykel.'},
+      {icon:'🌿',title:'Naturens rytm',body:'Cykeln är naturens eget system. Att respektera det är att respektera henne.'},
+      {icon:'💬',title:'Validera — inte lösa',body:'"Jag förstår att det är jobbigt" slår alltid "men prova att…".'},
+      {icon:'🎯',title:'Fokus på det väsentliga',body:'Vad hon behöver nu är enkel omtanke. Allt annat kan vänta.'},
+      {icon:'🌈',title:'Morgondagen är bättre',body:'Påminn dig om att varje dag bär på möjligheten att det vänder.'},
+      {icon:'💫',title:'Din tålamod är kärlek',body:'Att hålla ut nu — stilla och varm — är den finaste formen av kärlek.'},
+      {icon:'🌟',title:'Du är en bra partner',body:'Det faktum att du försöker förstå gör dig till en bättre partner. Det märks.'},
     ],
     expect:[
       {icon:'🌧️',label:'Humör',text:'Mer känslosam, irritabel eller nedstämd i slutet av fasen (PMS). Normalt.'},
@@ -544,10 +729,12 @@ const HIS_PHASES = {
   }
 };
 
+// ── PHASE DATA (HER) ──────────────────────────────────
 const HER_PHASES = {
   menstrual: {
     name:'Mensfas', label:'Dag 1–5 · Mens', hex:'#A63D2F', hexLight:'#F7EDEB',
     summary:'Om X dagar. Lägre energi och kramper möjligt. Ta det lugnt med dig själv.',
+    description:'Livmodern arbetar hårt. Östrogen och progesteron är låga, energin likaså. Det är biologiskt normalt att må sämre nu — och du förtjänar att ta hand om dig själv.',
     tips:[
       {icon:'🛁',title:'Värme är din vän',body:'En värmekudde eller varm dusch kan göra underverk mot kramper. Du förtjänar det.'},
       {icon:'💬',title:'Berätta hur du mår',body:'Säg till din partner vad du behöver just nu. De vill hjälpa — ge dem chansen.'},
@@ -579,6 +766,25 @@ const HER_PHASES = {
       {icon:'🏠',title:'Skapa en trygg plats',body:'Be om att få ha det lugnt hemma. Din partner vill veta hur de kan hjälpa.'},
       {icon:'👁️',title:'Se dig själv med vänlighet',body:'Du hade inte valt att må så här. Var snäll mot dig själv.'},
       {icon:'💪',title:'Det vänder snart',body:'Om några dagar stiger östrogenet och du kommer känna dig mycket bättre.'},
+      {icon:'🧦',title:'Håll dig varm',body:'Värme i kroppen hjälper mot kramper. Varma kläder, en filt — ta hand om dig.'},
+      {icon:'🌺',title:'Du förtjänar omsorg',body:'Det är okej att be om att bli omhändertagen. Det är ett styrketecken.'},
+      {icon:'🎧',title:'Podcast eller musik',body:'En lugnande röst eller favoritlåten i öronen kan stänga ute det som är jobbigt.'},
+      {icon:'🕯️',title:'Skapa stämning',body:'Tänd ett ljus, dämpa belysningen. En mjuk miljö hjälper kroppen att landa.'},
+      {icon:'🍵',title:'Hallonbladsté',body:'Traditionellt mot mensvärk. Värt att prova om du inte gjort det.'},
+      {icon:'🧁',title:'Unna dig något gott',body:'Inte som kompensation — utan som ren och skär omtanke om dig själv.'},
+      {icon:'📱',title:'Sök stöd',body:'Skriv till en vän, din partner, din mamma. Du behöver inte vara stark ensam.'},
+      {icon:'🌙',title:'Tidig läggdags',body:'Om kroppen vill sova — lyssna. Det är inte svaghet, det är visdom.'},
+      {icon:'🌸',title:'Var snäll mot dig',body:'Du hade inte valt det här. Var mot dig själv som du hade varit mot en vän.'},
+      {icon:'💫',title:'Det är tillfälligt',body:'Mensfasen varar ett par dagar. Sedan väntar follikulärfasen — och du på ditt bästa.'},
+      {icon:'🤍',title:'Dina känslor är okej',body:'Alla av dem. Ilskan, ledsenheten, tröttheten. De är tillåtna.'},
+      {icon:'🏡',title:'Hemma är bäst nu',body:'Det är okej att avboka saker och stanna hemma. Du mår bättre av det.'},
+      {icon:'🌿',title:'Naturlig cykel',body:'Din kropp gör precis vad den ska. Det är naturens gång — inte ett problem.'},
+      {icon:'❤️',title:'Relationen klarar det',body:'En bra relation klarar din mensfas. Du behöver inte vara på topp hela tiden.'},
+      {icon:'🎯',title:'En sak i taget',body:'Gör bara det som verkligen måste göras. Resten kan vänta.'},
+      {icon:'🌻',title:'Acceptera hjälp',body:'Om någon vill hjälpa — ta emot det. Det är inte svaghet att låta sig hjälpas.'},
+      {icon:'🔮',title:'Nästa fas är nära',body:'Follikulärfasen väntar. Och med den — du på ditt mest energiska.'},
+      {icon:'💝',title:'Du räcker',body:'Precis som du är, precis nu. Du räcker.'},
+      {icon:'🌟',title:'Kom ihåg det här',body:'Nästa gång du är på topp — kom ihåg att du klarade det här. Det gör du varje gång.'},
     ],
     expect:[
       {icon:'😔',label:'Humör',text:'Mer känslosam, trött eller irriterad. Det är biologiskt — inte din personlighet.'},
@@ -590,6 +796,7 @@ const HER_PHASES = {
   follicular: {
     name:'Follikulär fas', label:'Dag 6–13 · Uppbyggnad', hex:'#3D7A5E', hexLight:'#E8F3EE',
     summary:'Om X dagar. Energin stiger och du mår bättre. Passa på!',
+    description:'Östrogenet stiger och med det din energi, kreativitet och kommunikationsförmåga. Det här är ofta den bästa perioden i cykeln — dra nytta av det.',
     tips:[
       {icon:'🚀',title:'Du är på gång',body:'Östrogenet stiger och energin med det. Njut av det — du förtjänar det efter mensfasen.'},
       {icon:'💬',title:'Bra tid för viktiga samtal',body:'Du är mer kommunikativ och empatisk nu. Ta upp det du velat prata om.'},
@@ -621,6 +828,25 @@ const HER_PHASES = {
       {icon:'😊',title:'Sätt ord på glädjen',body:'Berätta för din partner att du mår bra. De är glada att höra det.'},
       {icon:'🧠',title:'Hjärnan är din vän nu',body:'Använd den skärpan till något du bryr dig om.'},
       {icon:'❤️',title:'Investera i relationen',body:'Det här är en av de bästa faserna för att stärka er relation. Var närvarande.'},
+      {icon:'🌟',title:'Du på ditt bästa',body:'Kom ihåg den här känslan. Det är du — det är inte ovanligt, det är din kapacitet.'},
+      {icon:'🎶',title:'Musik och rörelse',body:'Sätt på favoritlåten och rör dig. Det förstärker den goda energin.'},
+      {icon:'💼',title:'Ta tag i arbetet',body:'Nu är du skarp och fokuserad. Perfekt tid för det som kräver hjärna.'},
+      {icon:'🎭',title:'Prova något nytt',body:'Teater, kurs, ny aktivitet — du är nyfiken och öppen nu.'},
+      {icon:'🏊',title:'Fysisk utmaning',body:'Din kropp svarar bra på belastning nu. Pusha dig lite mer än vanligt.'},
+      {icon:'📝',title:'Journalisera',body:'Skriv ned hur du mår. Det är lärorikt att ha att jämföra med lutealfasen.'},
+      {icon:'🌈',title:'Din positiva energi smittar',body:'De runt dig märker av din energi. Sprid den med glädje.'},
+      {icon:'🔑',title:'Ta svåra beslut nu',body:'Hjärnan är klar och beslutsam. Nu är rätt tid för saker du skjutit på.'},
+      {icon:'🤗',title:'Var öppen och nyfiken',body:'Du är mer mottaglig för nya intryck nu. Säg ja till det du normalt kanske tackar nej till.'},
+      {icon:'🦋',title:'Transformation',body:'Du har nyss gått igenom mensfasen. Det här är din återuppbyggnad — fira det.'},
+      {icon:'🌻',title:'Var generös',body:'Du har kapacitet att ge nu. Visa omtanke för dem du bryr dig om.'},
+      {icon:'💫',title:'Fånga dina idéer',body:'Skriv ned idéerna som kommer. Under lutealfasen kanske de känns avlägsna.'},
+      {icon:'🎯',title:'Starta projektet',body:'Det du velat börja med — gör det nu. Energin och motivationen är på plats.'},
+      {icon:'🌺',title:'Ta hand om dig',body:'Du mår bra nu — men det kräver bränsle. Ät bra, sov bra, rör dig.'},
+      {icon:'💝',title:'Kärlek i rörelse',body:'Din kapacitet att ge och ta emot kärlek är hög nu. Visa det.'},
+      {icon:'🏆',title:'Du är kapabel',body:'Allt du åstadkommer nu är ditt. Ta äran för det.'},
+      {icon:'🌙',title:'Kvällsreflektion',body:'Lägg dig med en känsla av att du använt dagen väl. Du förtjänar den stoltheten.'},
+      {icon:'🌟',title:'Du är på rätt spår',body:'Det du känner nu är inte tillfälligt — det är din fulla potential.'},
+      {icon:'💪',title:'Starka dagar',body:'Njut av de här dagarna. De är din premie efter mensfasens arbete.'},
     ],
     expect:[
       {icon:'😊',label:'Humör',text:'Mer optimistisk, social och energisk. Östrogenet stiger.'},
@@ -632,6 +858,7 @@ const HER_PHASES = {
   ovulation: {
     name:'Ägglossningsfas', label:'Dag 14–17 · Topp', hex:'#B8860B', hexLight:'#FBF5E0',
     summary:'Om X dagar. Du är på topp — energisk, öppen och stark. Var närvarande.',
+    description:'Östrogen och testosteron är på sina högsta nivåer. Du är som mest utåtriktad, kommunikativ och stark. Det här är din kraftfullaste period — använd den.',
     tips:[
       {icon:'✨',title:'Du strålar',body:'Östrogen och testosteron är på topp. Du är som mest utåtriktad och självsäker.'},
       {icon:'❤️',title:'Visa kärlek öppet',body:'Du är mer mottaglig för intimitet och närhet nu. Var öppen med det.'},
@@ -655,7 +882,7 @@ const HER_PHASES = {
       {icon:'🌙',title:'Kvalitetstid',body:'Lägg undan telefonen ikväll. Full närvaro med din partner uppskattas.'},
       {icon:'👀',title:'Se din partner',body:'Du är mer empatisk nu. Fråga hur de mår — och lyssna verkligen.'},
       {icon:'🧡',title:'Var generös',body:'Du har energi att ge. Visa omtanke för din partner utan att bli tillfrågad.'},
-      {icon:'💪',title:'Du är starkare än du tror',body:'Kom ihåg det här känslan — den är din grund.'},
+      {icon:'💪',title:'Du är starkare än du tror',body:'Kom ihåg den här känslan — den är din grund.'},
       {icon:'🎵',title:'Musik och dans',body:'Sätt på din favoritlåt och rör dig. Det förstärker den goda energin.'},
       {icon:'🌸',title:'Ta emot kärlek',body:'Du är mer mottaglig nu. Låt din partner visa dig uppskattning.'},
       {icon:'🏖️',title:'Spontanitet',body:'Säg ja till något oplanerat idag. Du är i rätt läge för det.'},
@@ -663,6 +890,25 @@ const HER_PHASES = {
       {icon:'🎭',title:'Upplev något nytt',body:'Teater, konsert, ny restaurang — du är öppen för intryck nu.'},
       {icon:'🔋',title:'Ladda för lutealfasen',body:'Skapa goda minnen nu — du kommer behöva dem om några dagar.'},
       {icon:'❤️',title:'Närvaro är allt',body:'Du är på topp. Var helt närvarande — för dig själv och din partner.'},
+      {icon:'🌊',title:'Djup kontakt',body:'Du är mer öppen för intimitet och sårbarhet. Ta chansen att verkligen möta din partner.'},
+      {icon:'🏆',title:'Din bästa version',body:'Det här är du på topp. Kom ihåg hur det känns — det är din kapacitet.'},
+      {icon:'🌻',title:'Ge dig tillåtelse',body:'Att njuta av att du mår bra är okej. Du behöver inte vänta på nästa nedgång.'},
+      {icon:'💫',title:'Fånga ögonblicket',body:'Dessa dagar är korta. Var helt i dem — inte i nästa fas eller förra.'},
+      {icon:'🎯',title:'Ditt bästa arbete',body:'Om det finns något viktigt att leverera — nu är rätt tid.'},
+      {icon:'🔮',title:'Planera framåt',body:'Medan du är i bra form — planera för lutealfasen. Vad kommer du behöva?'},
+      {icon:'🌙',title:'Var i stunden',body:'Inget scrollande, inget planerande. Bara nu, bara dig.'},
+      {icon:'💝',title:'Säg det du känner',body:'Till din partner, en vän, dig själv. Du är öppen och ärlig nu.'},
+      {icon:'🦋',title:'Du är i din kraft',body:'Känn den. Det är din kropp på sitt starkaste.'},
+      {icon:'🌺',title:'Ta emot beröm',body:'Om någon säger något fint — ta emot det. Du förtjänar det.'},
+      {icon:'🎈',title:'Fira det lilla',body:'Fira att du mår bra. Det är skäl nog.'},
+      {icon:'🌟',title:'Du lyser',body:'Inte för att du måste — utan för att du faktiskt gör det just nu.'},
+      {icon:'🧡',title:'Ge kärlek fritt',body:'Du har mycket att ge nu. Ge det utan räkning.'},
+      {icon:'🏄',title:'Rida vågen',body:'Du är i din bästa fas. Rida den — fullt ut och utan förbehåll.'},
+      {icon:'💌',title:'Skriv till din partner',body:'Ett oväntat, ärligt meddelande mitt på dagen. Det stannar kvar.'},
+      {icon:'🎶',title:'Sjung högt',body:'Sätt på favoritlåten och sjung. Det är tillåtet att vara lycklig.'},
+      {icon:'🌿',title:'Naturen ropar',body:'Ut. Promenera, spring, sitt i solen. Din kropp vill vara i rörelse nu.'},
+      {icon:'🔑',title:'Öppna dig',body:'Dela något äkta med din partner. Du är modigare nu.'},
+      {icon:'💫',title:'Du är tillräcklig',body:'Precis som du är, just nu. Mer än tillräcklig.'},
     ],
     expect:[
       {icon:'🌟',label:'Humör',text:'Mer självsäker, glad och social. Hormonerna är på topp.'},
@@ -674,6 +920,7 @@ const HER_PHASES = {
   luteal: {
     name:'Lutealfas', label:'Dag 18–28 · Nedgång', hex:'#6B5B8A', hexLight:'#EEE9F8',
     summary:'Om X dagar. Energin sjunker och PMS möjligt. Var snäll mot dig själv.',
+    description:'Progesteron dominerar och östrogen sjunker. Serotonin påverkas, vilket kan ge irritation och nedstämdhet. Det är biologiskt — inte din personlighet. Du bestämmer fortfarande hur du agerar, men det är okej att behöva mer omsorg nu.',
     tips:[
       {icon:'🧘',title:'Sänk tempot',body:'Energin minskar. Det är okej — du behöver inte prestera lika mycket nu.'},
       {icon:'💬',title:'Säg hur du mår',body:'Berätta för din partner att du är i lutealfasen. De vill förstå — hjälp dem.'},
@@ -704,7 +951,26 @@ const HER_PHASES = {
       {icon:'📱',title:'Hör av dig om du behöver',body:'Skicka ett meddelande till din partner mitt på dagen om du mår dåligt. De vill veta.'},
       {icon:'🎬',title:'Myskväll',body:'En film, soffan, ingen press. Du förtjänar det.'},
       {icon:'💪',title:'Du klarar det här',body:'Du har klarat det varje månad. Den här gången är inget undantag.'},
-      {icon:'🌸',title:'Snart är du på topp igen',body:'Lutealfasen är tillfällig. Follikulärfasen väntar — och med den, du på bästa.'},
+      {icon:'🌸',title:'Snart är du på topp igen',body:'Lutealfasen är tillfällig. Follikulärfasen väntar — och med den, du på ditt bästa.'},
+      {icon:'🎧',title:'Stäng ute bruset',body:'Hörlurar och favoritmusik. Det är okej att skärma av sig lite nu.'},
+      {icon:'🌙',title:'Tidig natt',body:'Om kroppen vill sova — lyssna. Det är inte svaghet, det är visdom.'},
+      {icon:'🕯️',title:'Lugn atmosfär',body:'Tänd ett ljus, dämpa belysningen. Det signalerar till kroppen att det är okej att landa.'},
+      {icon:'🍵',title:'Hallonbladsté',body:'Traditionellt mot PMS. Värt att prova om du inte gjort det.'},
+      {icon:'🤍',title:'Dina känslor är okej',body:'Alla av dem. Ilskan, ledsenheten, tröttheten. De är tillåtna.'},
+      {icon:'🧪',title:'Det är biokemi',body:'PMS är inte ett val. Kom ihåg det när det är som tuffast.'},
+      {icon:'🎯',title:'En sak i taget',body:'Gör bara det som verkligen måste göras. Resten kan vänta.'},
+      {icon:'🌻',title:'Acceptera hjälp',body:'Om din partner vill hjälpa — ta emot det. Det är inte svaghet.'},
+      {icon:'💝',title:'Var snäll mot dig',body:'Precis som du hade varit mot en vän i samma situation.'},
+      {icon:'🔮',title:'Det är tillfälligt',body:'Inom några dagar vänder det. Håll det perspektivet.'},
+      {icon:'🌟',title:'Du är mer än din fas',body:'Lutealfasen är en del av dig — inte hela du. Du är mer.'},
+      {icon:'💫',title:'Nästa fas är nära',body:'Follikulärfasen väntar. Och med den — du på ditt mest energiska.'},
+      {icon:'🌺',title:'Be om det du behöver',body:'Inte ursäkta dig, inte förklara dig. Bara be om det du behöver.'},
+      {icon:'🏡',title:'Hemma är tryggt',body:'Det är okej att stanna hemma och ta hand om dig. Det är inte att ge upp.'},
+      {icon:'🎁',title:'Ge dig själv något',body:'En liten glädje utan anledning. Du förtjänar det.'},
+      {icon:'💬',title:'Kommunicera tidigt',body:'Säg till din partner hur du mår innan det kokar över. Det är lättare för er båda.'},
+      {icon:'🌊',title:'Rida vågen',body:'Känslosvallningarna är som vågor. De kommer — och de går.'},
+      {icon:'🧡',title:'Du klarar det',body:'Varje månad. Varje gång. Du klarar det.'},
+      {icon:'🌙',title:'I morgon är det en dag till',body:'En dag är tillräckligt. Ta det en dag i taget.'},
     ],
     expect:[
       {icon:'🌧️',label:'Humör',text:'Mer känslosam, irritabel eller nedstämd. Det är biologiskt — inte din personlighet.'},
@@ -715,12 +981,57 @@ const HER_PHASES = {
   }
 };
 
-// ── HELPERS ──
+// ── HELPERS ───────────────────────────────────────────
 const EMOJI_MAP = {1:'😞',2:'😕',3:'😐',4:'🙂',5:'😊'};
+let _logCache = null;
+let currentTipIndex = 0;
+let chartDots = [];
 
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function makeId() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+}
+function nowTime() {
+  const t = new Date();
+  return String(t.getHours()).padStart(2,'0') + ':' + String(t.getMinutes()).padStart(2,'0');
+}
+function todayKey() {
+  const t = new Date();
+  return t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0');
+}
+function dateKey(d) {
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
 function getRole() { return localStorage.getItem('cc_role') || null; }
 function getPhaseData() { return getRole()==='her' ? HER_PHASES : HIS_PHASES; }
 
+// ── DATA ──────────────────────────────────────────────
+function getMoodLog() {
+  if (_logCache) return _logCache;
+  try { _logCache = JSON.parse(localStorage.getItem('cc_mood_log') || '{}'); } catch { _logCache = {}; }
+  return _logCache;
+}
+function saveMoodLog(log) {
+  _logCache = log;
+  localStorage.setItem('cc_mood_log', JSON.stringify(log));
+}
+function getEntriesForKey(key) {
+  const log = getMoodLog();
+  if (!log[key]) return [];
+  return Array.isArray(log[key]) ? log[key] : [log[key]];
+}
+function getAllEntries() {
+  const log = getMoodLog(), out = [];
+  Object.keys(log).sort().forEach(k => {
+    const arr = Array.isArray(log[k]) ? log[k] : (log[k] ? [log[k]] : []);
+    arr.forEach(e => out.push({key:k,...e}));
+  });
+  return out;
+}
+
+// ── CYCLE LOGIC ───────────────────────────────────────
 function getMensDuration() {
   const start=localStorage.getItem('cc_start'),end=localStorage.getItem('cc_mens_end');
   if(!start||!end)return 5;
@@ -745,6 +1056,11 @@ function getDayOfCycle(startDate,len) {
   const n=new Date();n.setHours(0,0,0,0);
   return((Math.floor((n-s)/86400000)%len)+len)%len+1;
 }
+function getCurrentPhaseName() {
+  const start=localStorage.getItem('cc_start'),len=parseInt(localStorage.getItem('cc_length'))||28;
+  if(!start)return'luteal';
+  return getCurrentPhase(getDayOfCycle(start,len),len,getMensDuration(),getOvStart()).phase;
+}
 function getUpcoming(cycleDay,len,mEnd,ovS) {
   const phases=['menstrual','follicular','ovulation','luteal'];
   const mensEnd=mEnd||5,follEnd=ovS?ovS-1:Math.round(len*0.46),ovEnd=ovS?ovS+3:follEnd+4;
@@ -764,30 +1080,8 @@ function getUpcoming(cycleDay,len,mEnd,ovS) {
   }
   return results;
 }
-function getSessionTips(phase,count=3) {
-  const key='cc_tip_'+phase.name;
-  const idx=parseInt(sessionStorage.getItem(key)||Math.floor(Math.random()*phase.tips.length));
-  const result=[];
-  for(let i=0;i<count;i++)result.push(phase.tips[(idx+i)%phase.tips.length]);
-  sessionStorage.setItem(key,(idx+1)%phase.tips.length);
-  return result;
-}
-function nowTime() {
-  const t=new Date();
-  return `${String(t.getHours()).padStart(2,'0')}:${String(t.getMinutes()).padStart(2,'0')}`;
-}
-function todayKey() {
-  const t=new Date();
-  return `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
-}
-function getMoodLog(){try{return JSON.parse(localStorage.getItem('cc_mood_log')||'{}')}catch{return{}}}
-function getCurrentPhaseName(){
-  const start=localStorage.getItem('cc_start'),len=parseInt(localStorage.getItem('cc_length'))||28;
-  if(!start)return'luteal';
-  return getCurrentPhase(getDayOfCycle(start,len),len,getMensDuration(),getOvStart()).phase;
-}
 
-// ── ROLE SELECT ──
+// ── ROLE SELECT ───────────────────────────────────────
 function selectRole(role) {
   localStorage.setItem('cc_role', role);
   document.getElementById('role-screen').style.display='none';
@@ -802,12 +1096,10 @@ function showSetup(role) {
     document.getElementById('setup-subtitle').textContent='Din cykelkompis';
     document.getElementById('name-label').textContent='Ditt namn';
     document.getElementById('input-name').placeholder='t.ex. Elin';
-    document.body.classList.add('her-mode');
   } else {
     document.getElementById('setup-subtitle').textContent='För dig som bryr dig';
     document.getElementById('name-label').textContent='Hennes namn';
     document.getElementById('input-name').placeholder='t.ex. Elin';
-    document.body.classList.remove('her-mode');
   }
   const t=new Date(),pad=n=>String(n).padStart(2,'0');
   document.getElementById('input-start').value=`${t.getFullYear()}-${pad(t.getMonth()+1)}-${pad(t.getDate())}`;
@@ -815,15 +1107,20 @@ function showSetup(role) {
 
 function applyRoleUI() {
   const role=getRole();
+  const body=document.body;
   if(role==='her') {
-    document.body.classList.add('her-mode');
+    body.classList.remove('partner-mode');
+    body.classList.add('her-mode');
+    body.setAttribute('data-role-symbol','♀');
     document.getElementById('mood-section-title').textContent='Hur mår du idag?';
     document.getElementById('tips-title').textContent='Tips för dig idag';
     document.getElementById('expect-title').textContent='Det här är normalt nu';
     document.getElementById('mood-tags').style.display='flex';
     document.getElementById('settings-name-label').textContent='Ditt namn';
   } else {
-    document.body.classList.remove('her-mode');
+    body.classList.remove('her-mode');
+    body.classList.add('partner-mode');
+    body.setAttribute('data-role-symbol','♂');
     document.getElementById('mood-section-title').textContent='Hur verkar hon må idag?';
     document.getElementById('tips-title').textContent='Tips för dig idag';
     document.getElementById('expect-title').textContent='Vad du kan förvänta dig';
@@ -832,34 +1129,29 @@ function applyRoleUI() {
   }
 }
 
-// ── MOOD ──
-let selectedMood=null;
-let selectedTags=[];
+// ── MOOD ──────────────────────────────────────────────
+let selectedMood = null;
+let selectedTags = [];
 
 function selectMood(val) {
-  selectedMood=val;
+  selectedMood = val;
   document.querySelectorAll('.mood-emoji-btn').forEach(b=>b.classList.toggle('selected',parseInt(b.dataset.val)===val));
 }
 function toggleTag(el) {
   el.classList.toggle('selected');
-  selectedTags=Array.from(document.querySelectorAll('.mood-tag.selected')).map(t=>t.textContent.trim());
+  selectedTags = Array.from(document.querySelectorAll('.mood-tag.selected')).map(t=>t.textContent.trim());
 }
 function saveMood() {
   if(!selectedMood){alert('Välj ett humör först.');return;}
-  try {
   const note=document.getElementById('mood-note').value.trim();
   const time=document.getElementById('mood-time').value||nowTime();
-  let log=getMoodLog();
+  const log=getMoodLog();
   const key=todayKey();
-  // Migrate old format safely
-  if(!log[key]) log[key]=[];
-  else if(!Array.isArray(log[key])) log[key]=[log[key]];
-  const ts=`${key}T${time}`;
-  log[key].push({mood:selectedMood,note,time,ts,tags:[...selectedTags],phase:getCurrentPhaseName()});
+  if(!log[key])log[key]=[];
+  else if(!Array.isArray(log[key]))log[key]=[log[key]];
+  log[key].push({id:makeId(),mood:selectedMood,note,time,tags:selectedTags,phase:getCurrentPhaseName()});
   log[key].sort((a,b)=>(a.time||'').localeCompare(b.time||''));
-  localStorage.setItem('cc_mood_log',JSON.stringify(log));
-  } catch(err) { alert('Kunde inte spara. Försök igen.'); return; }
-  // Reset
+  saveMoodLog(log);
   selectedMood=null;
   document.querySelectorAll('.mood-emoji-btn').forEach(b=>b.classList.remove('selected'));
   document.querySelectorAll('.mood-tag').forEach(b=>b.classList.remove('selected'));
@@ -872,68 +1164,183 @@ function saveMood() {
 }
 
 function renderTodayLog() {
-  const log=getMoodLog(),key=todayKey();
-  const entries=log[key]||(log[key]&&!Array.isArray(log[key])?[log[key]]:[]);
-  const arr=Array.isArray(log[key])?log[key]:[];
+  const key=todayKey();
+  const arr=getEntriesForKey(key);
   const el=document.getElementById('mood-today-log');
   if(!arr.length){el.innerHTML='';return;}
-  el.innerHTML=arr.map(e=>`<div class="mood-today-item"><span class="mood-today-time">${e.time||'--:--'}</span><span class="mood-today-emoji">${EMOJI_MAP[e.mood]}</span><span>${e.note||''}</span></div>`).join('');
+  const reversed=[...arr].reverse();
+  el.innerHTML=reversed.map(e=>
+    `<div class="mood-today-item">
+      <span class="mood-today-time">${e.time||'--:--'}</span>
+      <span class="mood-today-emoji">${EMOJI_MAP[e.mood]}</span>
+      <span>${escHtml(e.note||'')}</span>
+    </div>`
+  ).join('');
 }
 
-// ── DIARY ──
+// ── TIPS ──────────────────────────────────────────────
+let _currentPhaseForTips = null;
+
+function initTips(phase, cycleDay) {
+  _currentPhaseForTips = phase;
+  // Use cycle day as seed so same day = same starting tip
+  currentTipIndex = (cycleDay - 1) % phase.tips.length;
+  renderTip();
+}
+
+function renderTip() {
+  if(!_currentPhaseForTips)return;
+  const tips = _currentPhaseForTips.tips;
+  const tip = tips[currentTipIndex];
+  const total = tips.length;
+  document.getElementById('tips-container').innerHTML=
+    `<div class="tip-card">
+      <div class="tip-icon">${tip.icon}</div>
+      <div class="tip-title">${escHtml(tip.title)}</div>
+      <div class="tip-body">${escHtml(tip.body)}</div>
+    </div>`;
+  document.getElementById('tip-counter').textContent=`${currentTipIndex+1} / ${total}`;
+}
+function nextTip() {
+  if(!_currentPhaseForTips)return;
+  currentTipIndex=(currentTipIndex+1)%_currentPhaseForTips.tips.length;
+  renderTip();
+}
+function prevTip() {
+  if(!_currentPhaseForTips)return;
+  currentTipIndex=(currentTipIndex-1+_currentPhaseForTips.tips.length)%_currentPhaseForTips.tips.length;
+  renderTip();
+}
+
+// ── PANELS ────────────────────────────────────────────
+function openPanel(id) { document.getElementById(id).classList.add('open'); }
+function closePanel(id) { document.getElementById(id).classList.remove('open'); }
+
+// ── DIARY ────────────────────────────────────────────
 function openDiary() {
+  renderDiary();
+  openPanel('diary-panel');
+}
+
+function diaryEntryHTML(e) {
+  const eid = e.id || makeId();
+  const dn = new Date(e.key).toLocaleDateString('sv-SE',{weekday:'short',day:'numeric',month:'short'});
+  const tagsLine = e.tags&&e.tags.length ? `<div class="diary-tags-line">${escHtml(e.tags.join(' · '))}</div>` : '';
+  const noteHtml = e.note
+    ? escHtml(e.note)
+    : '<span style="color:var(--muted);font-style:italic">Ingen anteckning</span>';
+  return `
+    <div class="diary-entry" id="entry-${eid}"
+         data-key="${escHtml(e.key)}" data-id="${escHtml(e.id||'')}" data-time="${escHtml(e.time||'')}">
+      <div class="diary-meta">
+        <span class="diary-date">${dn}</span>
+        <span class="diary-time">${e.time||'--:--'}</span>
+      </div>
+      <div class="diary-emoji">${EMOJI_MAP[e.mood]}</div>
+      <div class="diary-right">
+        ${tagsLine}
+        <div class="diary-note" id="note-${eid}">${noteHtml}</div>
+        <div class="diary-actions">
+          <button class="diary-action-btn" onclick="editEntry('${eid}')">✏️ Redigera</button>
+          <button class="diary-action-btn" style="color:#A63D2F" onclick="deleteEntry('${eid}')">🗑️ Ta bort</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderDiary() {
   const log=getMoodLog();
-  const allKeys=Object.keys(log).sort((a,b)=>b.localeCompare(a));
+  const keys=Object.keys(log).sort((a,b)=>b.localeCompare(a));
   const el=document.getElementById('diary-content');
-  if(!allKeys.length){el.innerHTML='<div class="diary-empty">Inga anteckningar ännu.<br>Börja logga ikväll!</div>';document.getElementById('diary-panel').classList.add('open');return;}
+  if(!keys.length){el.innerHTML='<div class="diary-empty">Inga anteckningar ännu.<br>Börja logga ikväll!</div>';return;}
   const weeks={};
-  allKeys.forEach(k=>{
-    const d=new Date(k),monday=new Date(d);monday.setDate(d.getDate()-((d.getDay()+6)%7));
-    const wk=monday.toISOString().slice(0,10);
+  keys.forEach(k=>{
+    const d=new Date(k),mon=new Date(d);
+    mon.setDate(d.getDate()-((d.getDay()+6)%7));
+    const wk=dateKey(mon);
     if(!weeks[wk])weeks[wk]=[];
-    const entries=Array.isArray(log[k])?log[k]:[log[k]];
-    entries.forEach(e=>weeks[wk].push({key:k,...e}));
+    getEntriesForKey(k).forEach(e=>weeks[wk].push({key:k,...e}));
   });
+  const fmt=d=>d.toLocaleDateString('sv-SE',{day:'numeric',month:'short'});
   el.innerHTML=Object.keys(weeks).sort((a,b)=>b.localeCompare(a)).map(wk=>{
     const m=new Date(wk),s=new Date(wk);s.setDate(m.getDate()+6);
-    const fmt=d=>d.toLocaleDateString('sv-SE',{day:'numeric',month:'short'});
-    const entries=weeks[wk].map(e=>{
-      const dn=new Date(e.key).toLocaleDateString('sv-SE',{weekday:'short',day:'numeric',month:'short'});
-      const tagsLine=e.tags&&e.tags.length?`<div class="diary-tags-line">${e.tags.join(' · ')}</div>`:'';
-      return `<div class="diary-entry">
-        <div class="diary-meta"><span class="diary-date">${dn}</span><span class="diary-time">${e.time||'--:--'}</span></div>
-        <div class="diary-emoji">${EMOJI_MAP[e.mood]}</div>
-        <div class="diary-right">${tagsLine}<div class="diary-note">${e.note||'<span style="color:var(--muted);font-style:italic">Ingen anteckning</span>'}</div></div>
-      </div>`;
-    }).join('');
-    return `<div class="diary-week"><div class="diary-week-label">${fmt(m)} – ${fmt(s)}</div>${entries}</div>`;
+    // Sort entries within week: newest first
+    const sorted=[...weeks[wk]].sort((a,b)=>{
+      if(b.key!==a.key)return b.key.localeCompare(a.key);
+      return (b.time||'').localeCompare(a.time||'');
+    });
+    return `<div class="diary-week">
+      <div class="diary-week-label">${fmt(m)} – ${fmt(s)}</div>
+      ${sorted.map(diaryEntryHTML).join('')}
+    </div>`;
   }).join('');
-  document.getElementById('diary-panel').classList.add('open');
 }
-function closeDiary(){document.getElementById('diary-panel').classList.remove('open');}
 
-// ── CHART ──
-let chartInstance=null;
-function openChart(){document.getElementById('chart-panel').classList.add('open');setTimeout(renderChart,150);}
-function closeChart(){document.getElementById('chart-panel').classList.remove('open');}
+function editEntry(eid) {
+  const noteEl=document.getElementById('note-'+eid);
+  if(!noteEl||noteEl.querySelector('textarea'))return;
+  const cur=noteEl.innerText.trim();
+  const val=cur==='Ingen anteckning'?'':cur;
+  noteEl.innerHTML=`<textarea class="diary-edit-area" rows="2">${escHtml(val)}</textarea><button class="diary-save-edit" onclick="saveEdit('${eid}')">✓ Spara</button>`;
+  noteEl.querySelector('textarea').focus();
+}
+
+function saveEdit(eid) {
+  const entryEl=document.getElementById('entry-'+eid);
+  if(!entryEl)return;
+  const key=entryEl.dataset.key;
+  const id=entryEl.dataset.id;
+  const time=entryEl.dataset.time;
+  const ta=document.getElementById('note-'+eid)?.querySelector('textarea');
+  if(!ta)return;
+  const newNote=ta.value.trim();
+  const log=getMoodLog();
+  if(!log[key])return;
+  const arr=Array.isArray(log[key])?log[key]:[log[key]];
+  const e=id?arr.find(e=>e.id===id):arr.find(e=>(e.time||'')===time);
+  if(e){e.note=newNote;saveMoodLog(log);}
+  renderDiary();
+}
+
+function deleteEntry(eid) {
+  if(!confirm('Ta bort den här anteckningen?'))return;
+  const entryEl=document.getElementById('entry-'+eid);
+  if(!entryEl)return;
+  const key=entryEl.dataset.key;
+  const id=entryEl.dataset.id;
+  const time=entryEl.dataset.time;
+  const log=getMoodLog();
+  if(!log[key])return;
+  let arr=Array.isArray(log[key])?log[key]:[log[key]];
+  arr=id?arr.filter(e=>e.id!==id):arr.filter(e=>(e.time||'')!==time);
+  if(!arr.length)delete log[key];else log[key]=arr;
+  saveMoodLog(log);
+  renderDiary();
+  renderTodayLog();
+}
+
+// ── CHART ────────────────────────────────────────────
+function openChart() { openPanel('chart-panel'); setTimeout(renderChart,150); }
+
 function renderChart() {
-  const log=getMoodLog(),start=localStorage.getItem('cc_start'),len=parseInt(localStorage.getItem('cc_length'))||28;
+  const entries=getAllEntries();
+  const start=localStorage.getItem('cc_start'),len=parseInt(localStorage.getItem('cc_length'))||28;
   const mEnd=getMensDuration(),ovS=getOvStart();
-  // Flatten all entries with timestamps
-  const entries=[];
-  Object.keys(log).sort().forEach(k=>{
-    const arr=Array.isArray(log[k])?log[k]:[log[k]];
-    arr.forEach(e=>entries.push({key:k,time:e.time||'12:00',mood:e.mood}));
-  });
   const canvas=document.getElementById('moodChart'),ctx=canvas.getContext('2d');
-  const W=canvas.offsetWidth||300,H=200;
+  const W=canvas.offsetWidth||300,H=220;
   canvas.width=W*devicePixelRatio;canvas.height=H*devicePixelRatio;
   ctx.scale(devicePixelRatio,devicePixelRatio);
-  const pad={top:20,right:20,bottom:30,left:28};
+  const pad={top:20,right:20,bottom:35,left:30};
   const cw=W-pad.left-pad.right,ch=H-pad.top-pad.bottom;
   ctx.clearRect(0,0,W,H);
-  if(!entries.length){ctx.fillStyle='#8A8178';ctx.font='13px Jost,sans-serif';ctx.textAlign='center';ctx.fillText('Ingen data ännu',W/2,H/2);return;}
+  chartDots=[];
+  if(!entries.length){
+    ctx.fillStyle='#8A8178';ctx.font='13px Jost,sans-serif';ctx.textAlign='center';ctx.fillText('Ingen data ännu',W/2,H/2);
+    return;
+  }
   const bw=cw/Math.max(entries.length,1);
+  // Phase-colored backgrounds
+  const phaseColors={menstrual:'#A63D2F',follicular:'#3D7A5E',ovulation:'#B8860B',luteal:'#6B5B8A'};
   entries.forEach((e,i)=>{
     if(!start)return;
     const d=new Date(e.key);d.setHours(0,0,0,0);
@@ -941,25 +1348,56 @@ function renderChart() {
     const diff=Math.floor((d-s)/86400000);
     const day=((diff%len)+len)%len+1;
     const ph=getCurrentPhase(day,len,mEnd,ovS).phase;
-    const c={menstrual:'#A63D2F',follicular:'#3D7A5E',ovulation:'#B8860B',luteal:'#6B5B8A'};
-    ctx.fillStyle=c[ph]+'28';ctx.fillRect(pad.left+i*bw,pad.top,bw,ch);
+    ctx.fillStyle=phaseColors[ph]+'28';
+    ctx.fillRect(pad.left+i*bw,pad.top,bw,ch);
   });
+  // Grid
   for(let v=1;v<=5;v++){
     const y=pad.top+ch-((v-1)/4)*ch;
-    ctx.strokeStyle='#EAE5DF';ctx.lineWidth=1;
+    ctx.strokeStyle='rgba(28,24,20,0.08)';ctx.lineWidth=1;
     ctx.beginPath();ctx.moveTo(pad.left,y);ctx.lineTo(pad.left+cw,y);ctx.stroke();
     ctx.fillStyle='#8A8178';ctx.font='11px Jost,sans-serif';ctx.textAlign='right';
     ctx.fillText(EMOJI_MAP[v],pad.left-2,y+4);
   }
-  const values=entries.map(e=>e.mood);
-  if(values.length>1){
-    ctx.strokeStyle='#1C1814';ctx.lineWidth=2;ctx.lineJoin='round';ctx.beginPath();
-    values.forEach((v,i)=>{const x=pad.left+i*bw+bw/2,y=pad.top+ch-((v-1)/4)*ch;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
-    ctx.stroke();
+  const pts=entries.map((e,i)=>({
+    x:pad.left+i*bw+bw/2,
+    y:pad.top+ch-((e.mood-1)/4)*ch,
+    entry:e
+  }));
+  // Catmull-Rom spline
+  function cpBez(p0,p1,p2,t){
+    return{cx:p1.x+(p2.x-p0.x)*t/6,cy:p1.y+(p2.y-p0.y)*t/6};
   }
-  values.forEach((v,i)=>{
-    const x=pad.left+i*bw+bw/2,y=pad.top+ch-((v-1)/4)*ch;
-    ctx.fillStyle='#1C1814';ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fill();
+  function drawSpline(points,closedToBottom){
+    if(points.length<2)return;
+    ctx.beginPath();ctx.moveTo(points[0].x,points[0].y);
+    for(let i=0;i<points.length-1;i++){
+      const p0=points[Math.max(i-1,0)];
+      const p1=points[i];
+      const p2=points[i+1];
+      const p3=points[Math.min(i+2,points.length-1)];
+      const cp1=cpBez(p0,p1,p2,0.5);
+      const cp2={cx:p2.x-(p3.x-p1.x)*0.5/6,cy:p2.y-(p3.y-p1.y)*0.5/6};
+      ctx.bezierCurveTo(cp1.cx,cp1.cy,cp2.cx,cp2.cy,p2.x,p2.y);
+    }
+    if(closedToBottom){
+      const last=points[points.length-1],first=points[0];
+      ctx.lineTo(last.x,pad.top+ch);ctx.lineTo(first.x,pad.top+ch);ctx.closePath();
+    }
+  }
+  if(pts.length>1){
+    const grad=ctx.createLinearGradient(0,pad.top,0,pad.top+ch);
+    grad.addColorStop(0,'rgba(28,24,20,0.15)');grad.addColorStop(1,'rgba(28,24,20,0.01)');
+    drawSpline(pts,true);ctx.fillStyle=grad;ctx.fill();
+    drawSpline(pts,false);
+    ctx.strokeStyle='#1C1814';ctx.lineWidth=2;ctx.lineJoin='round';ctx.lineCap='round';ctx.stroke();
+  }
+  pts.forEach(pt=>{
+    ctx.shadowColor='rgba(28,24,20,0.2)';ctx.shadowBlur=4;
+    ctx.fillStyle='#1C1814';ctx.beginPath();ctx.arc(pt.x,pt.y,4.5,0,Math.PI*2);ctx.fill();
+    ctx.shadowBlur=0;
+    ctx.fillStyle='#F9F6F2';ctx.beginPath();ctx.arc(pt.x,pt.y,2,0,Math.PI*2);ctx.fill();
+    chartDots.push({x:pt.x,y:pt.y,entry:pt.entry});
   });
   ctx.fillStyle='#8A8178';ctx.font='9px Jost,sans-serif';ctx.textAlign='center';
   entries.forEach((e,i)=>{
@@ -968,25 +1406,52 @@ function renderChart() {
       ctx.fillText(d.toLocaleDateString('sv-SE',{day:'numeric',month:'short'}),pad.left+i*bw+bw/2,H-6);
     }
   });
+  canvas.onclick=(ev)=>handleChartClick(ev,canvas);
+  canvas.ontouchend=(ev)=>{ev.preventDefault();handleChartClick(ev.changedTouches[0],canvas);};
 }
 
-// ── INSIGHTS ──
+function handleChartClick(ev,canvas) {
+  const rect=canvas.getBoundingClientRect();
+  const mx=ev.clientX-rect.left,my=ev.clientY-rect.top;
+  const tooltip=document.getElementById('chart-tooltip');
+  let closest=null,minDist=30;
+  chartDots.forEach(dot=>{
+    const dist=Math.hypot(dot.x-mx,dot.y-my);
+    if(dist<minDist){minDist=dist;closest=dot;}
+  });
+  if(!closest){tooltip.style.display='none';return;}
+  const e=closest.entry;
+  const dn=new Date(e.key).toLocaleDateString('sv-SE',{weekday:'long',day:'numeric',month:'long'});
+  const time=e.time?` kl ${e.time}`:'';
+  const note=e.note?`<br>"${escHtml(e.note)}"`:'' ;
+  tooltip.innerHTML=`<strong>${dn}${time}</strong><br>${EMOJI_MAP[e.mood]} ${e.mood}.0${note}`;
+  tooltip.style.display='block';
+  tooltip.style.left=Math.min(closest.x,canvas.offsetWidth-210)+'px';
+  tooltip.style.top=(closest.y-tooltip.offsetHeight-10)+'px';
+}
+
+// ── INSIGHTS ─────────────────────────────────────────
 function openInsights() {
-  const log=getMoodLog(),start=localStorage.getItem('cc_start'),len=parseInt(localStorage.getItem('cc_length'))||28;
+  renderInsights();
+  openPanel('insights-panel');
+}
+
+function renderInsights() {
+  const entries=getAllEntries();
+  const el=document.getElementById('insights-content');
+  const len=parseInt(localStorage.getItem('cc_length'))||28;
+  const start=localStorage.getItem('cc_start');
   const name=localStorage.getItem('cc_name')||'henne';
   const capName=name.charAt(0).toUpperCase()+name.slice(1);
   const role=getRole();
-  const el=document.getElementById('insights-content');
-  const allEntries=[];
-  Object.keys(log).sort().forEach(k=>{
-    const arr=Array.isArray(log[k])?log[k]:[log[k]];
-    arr.forEach(e=>allEntries.push({key:k,...e}));
-  });
-  if(allEntries.length<3){el.innerHTML='<div class="insight-empty">Fortsätt logga — insikterna växer fram när det finns mer data.<br><br>Logga varje dag så börjar mönstren synas! 📈</div>';document.getElementById('insights-panel').classList.add('open');return;}
+  if(entries.length<5){
+    el.innerHTML='<div class="insight-empty">Fortsätt logga — insikterna växer fram när det finns mer data.<br><br>Logga varje dag så börjar mönstren synas! 📈</div>';
+    return;
+  }
   const avg=arr=>arr.length?Math.round((arr.reduce((a,b)=>a+b,0)/arr.length)*10)/10:null;
   const phaseGroups={menstrual:[],follicular:[],ovulation:[],luteal:[]};
   const hourGroups={morning:[],afternoon:[],evening:[]};
-  allEntries.forEach(e=>{
+  entries.forEach(e=>{
     if(phaseGroups[e.phase]!==undefined)phaseGroups[e.phase].push(e.mood);
     const h=parseInt((e.time||'12:00').split(':')[0]);
     if(h<12)hourGroups.morning.push(e.mood);
@@ -994,96 +1459,230 @@ function openInsights() {
     else hourGroups.evening.push(e.mood);
   });
   const phaseNames={menstrual:'Mensfas',follicular:'Follikulär fas',ovulation:'Ägglossning',luteal:'Lutealfas'};
-  const phaseAvgs=Object.keys(phaseGroups).filter(p=>phaseGroups[p].length>0).sort((a,b)=>avg(phaseGroups[b])-avg(phaseGroups[a]));
+  const phaseAvgs=Object.keys(phaseGroups).filter(p=>phaseGroups[p].length>=3).sort((a,b)=>avg(phaseGroups[b])-avg(phaseGroups[a]));
   const bestPhase=phaseAvgs[0],worstPhase=phaseAvgs[phaseAvgs.length-1];
   const hourLabels={morning:'på morgnarna',afternoon:'på eftermiddagarna',evening:'på kvällarna'};
-  const hourAvgs=Object.keys(hourGroups).filter(h=>hourGroups[h].length>0).sort((a,b)=>avg(hourGroups[b])-avg(hourGroups[a]));
+  const hourAvgs=Object.keys(hourGroups).filter(h=>hourGroups[h].length>=3).sort((a,b)=>avg(hourGroups[b])-avg(hourGroups[a]));
   const bestHour=hourAvgs[0],worstHour=hourAvgs[hourAvgs.length-1];
-  const totalAvg=avg(allEntries.map(e=>e.mood));
+  const totalAvg=avg(entries.map(e=>e.mood));
   const nameRef=role==='her'?'Du mår':'Hon mår';
   const nameRef2=role==='her'?'Du verkar':'Hon verkar';
+  const last7=entries.slice(-7).map(e=>e.mood),prev7=entries.slice(-14,-7).map(e=>e.mood);
+  const trend=last7.length>=3&&prev7.length>=3?(avg(last7)-avg(prev7)).toFixed(1):null;
   el.innerHTML=`
     <div class="insight-block">
-      <h3>🔍 ${role==='her'?'Din cykel':'${capName}s cykel'}</h3>
-      <div class="insight-row"><div class="insight-icon">📅</div><div class="insight-text"><strong>Cykellängd</strong>${len} dagar baserat på dina inställningar.</div></div>
-      <div class="insight-row"><div class="insight-icon">📊</div><div class="insight-text"><strong>Totalt snitthumör</strong>${totalAvg} av 5 baserat på ${allEntries.length} loggningar.</div></div>
+      <h3>🔍 ${role==='her'?'Din cykel':`${capName}s cykel`}</h3>
+      <div class="insight-row"><div class="insight-icon">📊</div><div class="insight-text"><strong>Totalt snitthumör</strong>${totalAvg} av 5 — ${entries.length} loggningar.</div></div>
       ${start?`<div class="insight-row"><div class="insight-icon">🗓️</div><div class="insight-text"><strong>Senaste mens</strong>${new Date(start).toLocaleDateString('sv-SE',{day:'numeric',month:'long'})}</div></div>`:''}
+      ${trend?`<div class="insight-row"><div class="insight-icon">${parseFloat(trend)>0?'⬆️':parseFloat(trend)<0?'⬇️':'➡️'}</div><div class="insight-text"><strong>Trend senaste 7 dagarna</strong>${parseFloat(trend)>0?'Bättre':parseFloat(trend)<0?'Sämre':'Oförändrat'} jämfört med veckan innan (${parseFloat(trend)>0?'+':''}${trend}).</div></div>`:''}
     </div>
     <div class="insight-block">
-      <h3>😊 Humörmönster</h3>
-      ${bestPhase?`<div class="insight-row"><div class="insight-icon">⬆️</div><div class="insight-text"><strong>${nameRef} som bäst under ${phaseNames[bestPhase]}</strong>Snitt ${avg(phaseGroups[bestPhase])} av 5.</div></div>`:''}
+      <h3>😊 Humörmönster per fas</h3>
+      ${bestPhase?`<div class="insight-row"><div class="insight-icon">⬆️</div><div class="insight-text"><strong>${nameRef} som bäst under ${phaseNames[bestPhase]}</strong>Snitt ${avg(phaseGroups[bestPhase])} av 5.</div></div>`:'<div class="insight-row"><div class="insight-icon">📈</div><div class="insight-text">Behöver minst 3 loggningar per fas för att jämföra.</div></div>'}
       ${worstPhase&&worstPhase!==bestPhase?`<div class="insight-row"><div class="insight-icon">⬇️</div><div class="insight-text"><strong>${nameRef} som sämst under ${phaseNames[worstPhase]}</strong>Snitt ${avg(phaseGroups[worstPhase])} av 5.</div></div>`:''}
       ${bestHour?`<div class="insight-row"><div class="insight-icon">🕐</div><div class="insight-text"><strong>${nameRef2} bäst ${hourLabels[bestHour]}</strong>Snitt ${avg(hourGroups[bestHour])} av 5.</div></div>`:''}
-      ${worstHour&&worstHour!==bestHour?`<div class="insight-row"><div class="insight-icon">🌙</div><div class="insight-text"><strong>${nameRef2} sämst ${hourLabels[worstHour]}</strong>Snitt ${avg(hourGroups[worstHour])} av 5.</div></div>`:''}
     </div>
     <div class="insight-block">
       <h3>💡 Tips</h3>
       <div class="insight-row"><div class="insight-icon">📈</div><div class="insight-text">Fortsätt logga dagligen — ju mer data, desto mer exakta insikter.</div></div>
       <div class="insight-row"><div class="insight-icon">🎯</div><div class="insight-text">Prova att logga flera gånger per dag för att se mönster inom dagen.</div></div>
+    </div>`;
+}
+
+// ── PHASE INFO PANEL ──────────────────────────────────
+function openPhaseInfo(phaseName) {
+  const PHASES=getPhaseData();
+  const phase=PHASES[phaseName];
+  if(!phase)return;
+  const phaseColors={menstrual:'#A63D2F',follicular:'#3D7A5E',ovulation:'#B8860B',luteal:'#6B5B8A'};
+  const dot=phaseColors[phaseName]||'#6B5B8A';
+  const el=document.getElementById('phase-info-content');
+  el.innerHTML=`
+    <div class="phase-info-header">
+      <div class="phase-info-dot" style="background:${dot}"></div>
+      <div>
+        <h2 class="serif" style="color:${dot};font-size:1.5rem;font-weight:300;">${phase.name}</h2>
+        <div class="phase-info-subtitle">${phase.label}</div>
+      </div>
     </div>
-  `.replace('${capName}',capName);
-  document.getElementById('insights-panel').classList.add('open');
-}
-function closeInsights(){document.getElementById('insights-panel').classList.remove('open');}
-
-// ── EXPORT / IMPORT ──
-function exportData() {
-  const data={
-    version:'0.5',
-    exported:new Date().toISOString(),
-    role:localStorage.getItem('cc_role'),
-    name:localStorage.getItem('cc_name'),
-    start:localStorage.getItem('cc_start'),
-    length:localStorage.getItem('cc_length'),
-    mens_end:localStorage.getItem('cc_mens_end'),
-    ovulation:localStorage.getItem('cc_ovulation'),
-    mood_log:getMoodLog()
-  };
-  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url;a.download=`cykelkompis-export-${todayKey()}.json`;
-  document.body.appendChild(a);a.click();document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-}
-function importData(event) {
-  const file=event.target.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=e=>{
-    try {
-      const data=JSON.parse(e.target.result);
-      if(data.name)localStorage.setItem('cc_name',data.name);
-      if(data.start)localStorage.setItem('cc_start',data.start);
-      if(data.length)localStorage.setItem('cc_length',data.length);
-      if(data.mens_end)localStorage.setItem('cc_mens_end',data.mens_end);
-      if(data.ovulation)localStorage.setItem('cc_ovulation',data.ovulation);
-      if(data.role)localStorage.setItem('cc_role',data.role);
-      if(data.mood_log)localStorage.setItem('cc_mood_log',JSON.stringify(data.mood_log));
-      alert('✓ Data importerad!');closeSettings();loadApp();
-    } catch {alert('Kunde inte läsa filen.');}
-  };
-  reader.readAsText(file);
+    <div class="phase-info-section">
+      <p style="font-size:0.85rem;color:var(--muted);line-height:1.7;margin-bottom:1.2rem;">${escHtml(phase.description||'')}</p>
+    </div>
+    <div class="phase-info-section">
+      <h3>Vad du kan förvänta dig</h3>
+      ${phase.expect.map(e=>`
+        <div class="phase-info-row">
+          <div class="phase-info-icon">${e.icon}</div>
+          <div class="phase-info-text"><strong>${escHtml(e.label)}</strong>${escHtml(e.text)}</div>
+        </div>`).join('')}
+    </div>
+    <div class="phase-info-section">
+      <h3>Tips för den här fasen</h3>
+      ${phase.tips.slice(0,5).map(t=>`
+        <div class="phase-info-row">
+          <div class="phase-info-icon">${t.icon}</div>
+          <div class="phase-info-text"><strong>${escHtml(t.title)}</strong>${escHtml(t.body)}</div>
+        </div>`).join('')}
+    </div>`;
+  openPanel('phase-panel');
 }
 
-function switchRole() {
-  if(confirm('Byt roll? Du kommer till startskärmen men all data behålls.')) {
-    localStorage.removeItem('cc_role');
-    closeSettings();
-    document.getElementById('app-screen').style.display='none';
-    document.getElementById('role-screen').style.display='flex';
+// ── STORY ────────────────────────────────────────────
+let storyPeriod = 'week';
+
+function openStory() {
+  const today=todayKey();
+  document.getElementById('story-to').value=today;
+  const wa=new Date();wa.setDate(wa.getDate()-7);
+  document.getElementById('story-from').value=dateKey(wa);
+  document.getElementById('story-output').innerHTML='';
+  openPanel('story-panel');
+}
+
+function setStoryPeriod(p) {
+  storyPeriod=p;
+  ['week','month','all','custom'].forEach(v=>document.getElementById('sp-'+v).classList.toggle('active',v===p));
+  document.getElementById('story-custom-row').style.display=p==='custom'?'flex':'none';
+}
+
+function getStoryEntries() {
+  const all=getAllEntries();
+  if(storyPeriod==='week'){const c=new Date();c.setDate(c.getDate()-7);return all.filter(e=>new Date(e.key)>=c);}
+  if(storyPeriod==='month'){const c=new Date();c.setDate(c.getDate()-30);return all.filter(e=>new Date(e.key)>=c);}
+  if(storyPeriod==='all')return all;
+  const from=document.getElementById('story-from').value;
+  const to=document.getElementById('story-to').value;
+  return all.filter(e=>e.key>=from&&e.key<=to);
+}
+
+function pick(arr){return arr[Math.floor(Math.random()*arr.length)];}
+
+function generateStory() {
+  const entries=getStoryEntries();
+  const outEl=document.getElementById('story-output');
+  if(!entries.length){outEl.innerHTML='<div class="story-output">Inga loggningar hittades för den valda perioden.</div>';return;}
+  const name=localStorage.getItem('cc_name')||'henne';
+  const role=getRole();
+  const capName=name.charAt(0).toUpperCase()+name.slice(1);
+  // Stats
+  const moods=entries.map(e=>e.mood);
+  const avg=moods.reduce((a,b)=>a+b,0)/moods.length;
+  const byDay={};
+  entries.forEach(e=>{if(!byDay[e.key])byDay[e.key]=[];byDay[e.key].push(e.mood);});
+  const dayList=Object.entries(byDay).map(([d,m])=>({date:d,avg:m.reduce((a,b)=>a+b,0)/m.length})).sort((a,b)=>a.date.localeCompare(b.date));
+  const best=[...dayList].sort((a,b)=>b.avg-a.avg)[0];
+  const worst=[...dayList].sort((a,b)=>a.avg-b.avg)[0];
+  const half=Math.floor(entries.length/2);
+  const a1=entries.slice(0,half).map(e=>e.mood).reduce((a,b)=>a+b,0)/Math.max(half,1);
+  const a2=entries.slice(half).map(e=>e.mood).reduce((a,b)=>a+b,0)/Math.max(entries.length-half,1);
+  const trend=a2-a1;
+  const notes=entries.filter(e=>e.note&&e.note.trim()).map(e=>e.note.trim());
+  const phases=entries.filter(e=>e.phase).map(e=>e.phase);
+  const phaseCounts={};phases.forEach(p=>{phaseCounts[p]=(phaseCounts[p]||0)+1;});
+  const dominantPhase=Object.keys(phaseCounts).sort((a,b)=>phaseCounts[b]-phaseCounts[a])[0];
+  const phaseNames={menstrual:'mensfasen',follicular:'follikulärfasen',ovulation:'ägglossningsfasen',luteal:'lutealfasen'};
+  const fmtD=ds=>{const d=new Date(ds);return d.getDate()+'/'+(d.getMonth()+1);};
+  const dayName=ds=>['söndag','måndag','tisdag','onsdag','torsdag','fredag','lördag'][new Date(ds).getDay()];
+  // Build narrative
+  const paragraphs=[];
+  // Opening
+  if(role==='her'){
+    const openings=[
+      `Det var ${dayList.length} dagar. Du loggade ${entries.length} gånger. Snittet landade på ${avg.toFixed(1)} av 5.`,
+      `${dayList.length} dagar, ${entries.length} loggningar. Genomsnittet för perioden var ${avg.toFixed(1)} av 5.`,
+      `Du stannade upp ${entries.length} gånger och frågade hur du mådde. Det är inte lite. Snittet: ${avg.toFixed(1)} av 5.`,
+    ];
+    paragraphs.push(pick(openings));
+  } else {
+    const openings=[
+      `Det var ${dayList.length} dagar. Du loggade ${capName}s humör ${entries.length} gånger. Snittet: ${avg.toFixed(1)} av 5.`,
+      `${dayList.length} dagar, ${entries.length} loggningar om ${capName}. Genomsnittligt humör: ${avg.toFixed(1)} av 5.`,
+      `Du noterade ${entries.length} gånger hur ${capName} verkade må. Det visar att du bryr dig. Snittet: ${avg.toFixed(1)} av 5.`,
+    ];
+    paragraphs.push(pick(openings));
   }
+  // Phase context
+  if(dominantPhase&&phaseNames[dominantPhase]){
+    if(role==='her'){
+      paragraphs.push(pick([
+        `Perioden dominerades av ${phaseNames[dominantPhase]}. Det sätter sin prägel på hur du mådde.`,
+        `Du befann dig till stor del i ${phaseNames[dominantPhase]} under den här tiden.`,
+      ]));
+    } else {
+      paragraphs.push(pick([
+        `Perioden dominerades av ${phaseNames[dominantPhase]} för ${capName}. Det påverkar humöret märkbart.`,
+        `${capName} befann sig till stor del i ${phaseNames[dominantPhase]} under den här perioden.`,
+      ]));
+    }
+  }
+  // Trend
+  if(entries.length>=4){
+    if(trend>0.4){
+      paragraphs.push(pick([
+        `Perioden rörde sig uppåt. Det slutade starkare än det började.`,
+        `En positiv rörelse — humöret steg under periodens gång.`,
+        `Kurvan pekar uppåt. Något lättade längs vägen.`,
+      ]));
+    } else if(trend<-0.4){
+      paragraphs.push(pick([
+        `Humöret tappade lite höjd mot slutet av perioden.`,
+        `Det började bättre än det slutade. Perioderna är sällan jämna.`,
+      ]));
+    } else {
+      paragraphs.push(pick([
+        `Humöret höll sig relativt stabilt under perioden — utan stora toppar eller dalar.`,
+        `En konsekvent period. Stabilt, men inte stillastående.`,
+      ]));
+    }
+  }
+  // Best/worst
+  if(best&&worst&&best.date!==worst.date){
+    paragraphs.push(pick([
+      `Bästa dagen var ${dayName(best.date)} den ${fmtD(best.date)}. Tuffast var ${dayName(worst.date)} den ${fmtD(worst.date)}.`,
+      `${dayName(best.date)} den ${fmtD(best.date)} stack ut som periodens höjdpunkt. ${dayName(worst.date)} den ${fmtD(worst.date)} var tyngst.`,
+    ]));
+  }
+  // Note
+  if(notes.length){
+    const note=notes[Math.floor(Math.random()*notes.length)];
+    if(role==='her'){
+      paragraphs.push(pick([
+        `Du skrev: "${escHtml(note)}" — ett litet fönster in i hur det faktiskt kändes.`,
+        `En av ${notes.length} anteckningar lyder: "${escHtml(note)}". Ord skrivna i stunden.`,
+      ]));
+    } else {
+      paragraphs.push(pick([
+        `Du noterade: "${escHtml(note)}" — ett ögonblick av uppmärksamhet.`,
+        `En av ${notes.length} anteckningar: "${escHtml(note)}".`,
+      ]));
+    }
+  }
+  // Closing
+  if(role==='her'){
+    paragraphs.push(pick([
+      `Att följa sig själv kräver ärlighet. Fortsätt.`,
+      `Varje loggning är ett litet ögonblick av självkännedom. Det är mer värt än det verkar.`,
+      `Cykeln rullar vidare. Och du med den.`,
+    ]));
+  } else {
+    paragraphs.push(pick([
+      `Att du noterar det här gör dig till en mer medveten partner. Det märks.`,
+      `Varje loggning är ett litet bevis på att du bryr dig. Det räknas.`,
+      `Du är uppmärksam. Det är mer ovanligt — och mer värdefullt — än du kanske tror.`,
+    ]));
+  }
+  outEl.innerHTML=`<div class="story-output">${paragraphs.join('<br><br>')}</div>`;
 }
 
-// ── SETTINGS ──
+// ── SETTINGS & IMPORT/EXPORT ──────────────────────────
 function openSettings() {
   document.getElementById('settings-name').value=localStorage.getItem('cc_name')||'';
   document.getElementById('settings-start').value=localStorage.getItem('cc_start')||'';
   document.getElementById('settings-end').value=localStorage.getItem('cc_mens_end')||'';
   document.getElementById('settings-ovulation').value=localStorage.getItem('cc_ovulation')||'';
   document.getElementById('settings-length').value=localStorage.getItem('cc_length')||28;
-  document.getElementById('settings-panel').classList.add('open');
+  openPanel('settings-panel');
 }
-function closeSettings(){document.getElementById('settings-panel').classList.remove('open');}
 function saveSettings() {
   const name=document.getElementById('settings-name').value.trim()||'henne';
   const start=document.getElementById('settings-start').value;
@@ -1093,64 +1692,135 @@ function saveSettings() {
   const end=document.getElementById('settings-end').value,ov=document.getElementById('settings-ovulation').value;
   if(end)localStorage.setItem('cc_mens_end',end);else localStorage.removeItem('cc_mens_end');
   if(ov)localStorage.setItem('cc_ovulation',ov);else localStorage.removeItem('cc_ovulation');
-  closeSettings();loadApp();
+  _logCache=null;
+  closePanel('settings-panel');loadApp();
+}
+function exportData() {
+  const data={version:VERSION,exported:new Date().toISOString(),role:localStorage.getItem('cc_role'),name:localStorage.getItem('cc_name'),start:localStorage.getItem('cc_start'),length:localStorage.getItem('cc_length'),mens_end:localStorage.getItem('cc_mens_end'),ovulation:localStorage.getItem('cc_ovulation'),mood_log:getMoodLog()};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download=`cykelkompis-export-${todayKey()}.json`;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+}
+function importData(event) {
+  const file=event.target.files[0];if(!file)return;
+  if(!confirm('Importera data? Din nuvarande data ersätts om filen innehåller ett namn eller logg.')){event.target.value='';return;}
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const data=JSON.parse(e.target.result);
+      if(data.name)localStorage.setItem('cc_name',data.name);
+      if(data.start)localStorage.setItem('cc_start',data.start);
+      if(data.length)localStorage.setItem('cc_length',data.length);
+      if(data.mens_end)localStorage.setItem('cc_mens_end',data.mens_end);
+      if(data.ovulation)localStorage.setItem('cc_ovulation',data.ovulation);
+      if(data.role)localStorage.setItem('cc_role',data.role);
+      if(data.mood_log){_logCache=null;localStorage.setItem('cc_mood_log',JSON.stringify(data.mood_log));}
+      alert('✓ Data importerad!');closePanel('settings-panel');loadApp();
+    }catch{alert('Kunde inte läsa filen.');}
+  };
+  reader.readAsText(file);
+}
+function switchRole() {
+  if(confirm('Byt roll? Du kommer till startskärmen men all data behålls.')){
+    localStorage.removeItem('cc_role');
+    closePanel('settings-panel');
+    document.getElementById('app-screen').style.display='none';
+    document.getElementById('role-screen').style.display='flex';
+  }
 }
 
-// ── SETUP ──
+// ── SETUP ────────────────────────────────────────────
 function setupApp() {
-  const name=document.getElementById('input-name').value.trim()||'henne';
-  const start=document.getElementById('input-start').value;
-  const length=parseInt(document.getElementById('input-length').value)||28;
-  if(!start){alert('Fyll i startdatum.');return;}
-  localStorage.setItem('cc_name',name);localStorage.setItem('cc_start',start);localStorage.setItem('cc_length',length);
-  document.getElementById('setup-screen').style.display='none';
-  loadApp();
+  try {
+    const name=document.getElementById('input-name').value.trim()||'henne';
+    const start=document.getElementById('input-start').value;
+    const length=parseInt(document.getElementById('input-length').value)||28;
+    if(!start){alert('Fyll i startdatum.');return;}
+    localStorage.setItem('cc_name',name);localStorage.setItem('cc_start',start);localStorage.setItem('cc_length',length);
+    document.getElementById('setup-screen').style.display='none';
+    loadApp();
+  } catch(err) {
+    alert('Något gick fel. Prova igen.');console.error(err);
+  }
 }
 
-// ── LOAD APP ──
+// ── LOAD APP ──────────────────────────────────────────
 function loadApp() {
-  const name=localStorage.getItem('cc_name')||'henne';
-  const start=localStorage.getItem('cc_start');
-  const length=parseInt(localStorage.getItem('cc_length'))||28;
-  if(!start)return;
-  const PHASES=getPhaseData();
-  const mEnd=getMensDuration(),ovS=getOvStart();
-  applyRoleUI();
-  document.getElementById('setup-screen').style.display='none';
-  document.getElementById('app-screen').style.display='block';
-  const cycleDay=getDayOfCycle(start,length);
-  const phaseInfo=getCurrentPhase(cycleDay,length,mEnd,ovS);
-  const phase=PHASES[phaseInfo.phase];
-  document.documentElement.style.setProperty('--phase-color',phase.hex);
-  document.documentElement.style.setProperty('--phase-light',phase.hexLight);
-  const today=new Date();
-  const ds=today.toLocaleDateString('sv-SE',{weekday:'long',day:'numeric',month:'long'});
-  document.getElementById('date-display').textContent=ds.charAt(0).toUpperCase()+ds.slice(1);
-  const role=getRole();
-  const capName=name.charAt(0).toUpperCase()+name.slice(1);
-  document.getElementById('phase-label').textContent=role==='her'?`Din cykel · ${phase.label}`:`${capName}s cykel · ${phase.label}`;
-  document.getElementById('phase-name').textContent=phase.name;
-  const daysLeft=phaseInfo.end-cycleDay+1;
-  document.getElementById('phase-days').innerHTML=`<strong>${daysLeft} dag${daysLeft!==1?'ar':''}</strong> kvar i fasen`;
-  document.getElementById('cycle-day-num').textContent=cycleDay;
-  document.getElementById('cycle-total').textContent=length;
-  document.getElementById('cycle-fill').style.width=((cycleDay/length)*100)+'%';
-  document.getElementById('mood-save-btn').style.background=phase.hex;
-  document.getElementById('mood-time').value=nowTime();
-  renderTodayLog();
-  document.getElementById('tips-container').innerHTML=getSessionTips(phase,3).map(t=>
-    `<div class="tip-card"><div class="tip-icon">${t.icon}</div><div class="tip-title">${t.title}</div><div class="tip-body">${t.body}</div></div>`
-  ).join('');
-  document.getElementById('expect-container').innerHTML=phase.expect.map(e=>
-    `<div class="expect-row"><div class="expect-icon">${e.icon}</div><div class="expect-text"><strong>${e.label}</strong><span>${e.text}</span></div></div>`
-  ).join('');
-  document.getElementById('upcoming-container').innerHTML=getUpcoming(cycleDay,length,mEnd,ovS).map(u=>
-    `<div class="upcoming-item"><div class="upcoming-dot" style="background:${u.dot}"></div><div class="upcoming-info"><strong>${u.name}</strong><span>${u.summary.replace('X',u.daysUntil)}</span></div></div>`
-  ).join('');
-  if(!window.matchMedia('(display-mode: standalone)').matches)document.getElementById('add-to-home-btn').style.display='flex';
+  try {
+    _logCache=null;
+    const name=localStorage.getItem('cc_name')||'henne';
+    const start=localStorage.getItem('cc_start');
+    const length=parseInt(localStorage.getItem('cc_length'))||28;
+    if(!start)return;
+    const mEnd=getMensDuration(),ovS=getOvStart();
+    applyRoleUI();
+    document.getElementById('setup-screen').style.display='none';
+    document.getElementById('app-screen').style.display='block';
+    const cycleDay=getDayOfCycle(start,length);
+    const phaseInfo=getCurrentPhase(cycleDay,length,mEnd,ovS);
+    const PHASES=getPhaseData();
+    const phase=PHASES[phaseInfo.phase];
+    document.documentElement.style.setProperty('--phase-color',phase.hex);
+    document.documentElement.style.setProperty('--phase-light',phase.hexLight);
+    const today=new Date();
+    const ds=today.toLocaleDateString('sv-SE',{weekday:'long',day:'numeric',month:'long'});
+    document.getElementById('date-display').textContent=ds.charAt(0).toUpperCase()+ds.slice(1);
+    const role=getRole();
+    const capName=name.charAt(0).toUpperCase()+name.slice(1);
+    document.getElementById('phase-label').textContent=role==='her'?`Din cykel · ${phase.label}`:`${capName}s cykel · ${phase.label}`;
+    document.getElementById('phase-name').textContent=phase.name;
+    const daysLeft=phaseInfo.end-cycleDay+1;
+    document.getElementById('phase-days').innerHTML=`<strong>${daysLeft} dag${daysLeft!==1?'ar':''}</strong> kvar i fasen`;
+    document.getElementById('cycle-day-num').textContent=cycleDay;
+    document.getElementById('cycle-total').textContent=length;
+    // Fix: fill = cycleDay/length * 100%
+    document.getElementById('cycle-fill').style.width=((cycleDay/length)*100)+'%';
+    document.getElementById('mood-save-btn').style.background=phase.hex;
+    document.getElementById('mood-time').value=nowTime();
+    renderTodayLog();
+    // Tips with pilnavigation
+    initTips(phase, cycleDay);
+    // Expect
+    document.getElementById('expect-container').innerHTML=phase.expect.map(e=>
+      `<div class="expect-row"><div class="expect-icon">${e.icon}</div><div class="expect-text"><strong>${escHtml(e.label)}</strong><span>${escHtml(e.text)}</span></div></div>`
+    ).join('');
+    // Upcoming — clickable
+    const upcoming=getUpcoming(cycleDay,length,mEnd,ovS);
+    document.getElementById('upcoming-container').innerHTML=upcoming.map(u=>
+      `<div class="upcoming-item" onclick="openPhaseInfo('${u.phase}')">
+        <div class="upcoming-dot" style="background:${u.dot}"></div>
+        <div class="upcoming-info">
+          <strong>${u.name}</strong>
+          <span>${u.summary.replace('X',u.daysUntil)}</span>
+        </div>
+        <span class="upcoming-chevron">›</span>
+      </div>`
+    ).join('');
+    // Cycle bar phase labels with correct widths
+    renderCycleBarPhases(length,mEnd,ovS,cycleDay);
+    if(!window.matchMedia('(display-mode: standalone)').matches)document.getElementById('add-to-home-btn').style.display='flex';
+  } catch(err) {
+    console.error('loadApp error:',err);
+  }
 }
 
-// ── PWA ──
+function renderCycleBarPhases(len,mEnd,ovS,cycleDay) {
+  const mensEnd=mEnd||5,follEnd=ovS?ovS-1:Math.round(len*0.46),ovEnd=ovS?ovS+3:follEnd+4;
+  const phases=[
+    {name:'Mens',start:1,end:mensEnd},
+    {name:'Follikulär',start:mensEnd+1,end:follEnd},
+    {name:'Ägglossning',start:follEnd+1,end:ovEnd},
+    {name:'Luteal',start:ovEnd+1,end:len},
+  ];
+  const container=document.getElementById('cycle-bar-phases');
+  container.innerHTML=phases.map(p=>{
+    const w=((p.end-p.start+1)/len*100).toFixed(1);
+    return `<span class="cycle-bar-phase-label" style="width:${w}%">${p.name}</span>`;
+  }).join('');
+}
+
+// ── PWA ──────────────────────────────────────────────
 let deferredPrompt=null;
 const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
 const isStandalone=window.matchMedia('(display-mode: standalone)').matches;
@@ -1161,7 +1831,7 @@ function dismissIOSPrompt(){document.getElementById('ios-prompt').classList.remo
 if(isIOS&&!isStandalone){setTimeout(()=>{if(localStorage.getItem('cc_start'))document.getElementById('ios-prompt').classList.add('show');},4000);}
 if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}
 
-// ── INIT ──
+// ── INIT ─────────────────────────────────────────────
 window.addEventListener('load',()=>{
   const role=getRole();
   const start=localStorage.getItem('cc_start');
